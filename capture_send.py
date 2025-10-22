@@ -4,11 +4,13 @@ Flask + PiCamera2 Streaming and Analysis Server
 ------------------------------------------------
 Features:
 - Live video streaming from Raspberry Pi Camera
-- FPS overlay
-- Capture multiple frames
-- Select top sharpest frames
-- Robust face extraction with fallback rotations
-- Save cropped faces
+- Overlay FPS on live feed
+- Capture multiple frames in a burst
+- Save all captured frames in 'captured_images'
+- Select top N sharpest frames
+- Robust face extraction with margin and small rotations
+- Save best faces in 'best' folder
+- Send best faces to simulated API
 """
 
 from flask import Flask, Response, render_template_string, request, jsonify
@@ -21,10 +23,12 @@ import os
 # ---------------------------
 # CONFIGURATION
 # ---------------------------
-CAPTURE_COUNT = 10         # Total frames to capture
-TOP_N = 5                  # Number of top sharp frames to try face extraction
+CAPTURE_BURST_COUNT = 10          # Number of frames per burst
+CAPTURE_DURATION = 1.2            # Duration in seconds for burst
+TOP_N = 5                         # Number of sharpest frames to keep
+DEFAULT_MARGIN = 0.1              # Margin around face (10% of width/height)
 FALLBACK_ANGLES = [-30, 30, -15, 15]  # Rotations for robust detection
-HAAR_PATH = "./haarcascade_frontalface_default.xml"  # Local Haar cascade file
+HAAR_CASCADE_PATH = "../haarcascade_frontalface_default.xml"  # Custom cascade path
 
 # ---------------------------
 # FOLDER SETUP
@@ -54,8 +58,9 @@ frame_lock = threading.Condition()
 # ---------------------------
 # HELPER FUNCTIONS
 # ---------------------------
+
 def save_frame(frame, folder="captured_images", prefix="frame"):
-    """Save a frame to disk with timestamped name."""
+    """Save a frame to disk with timestamped filename"""
     timestamp = time.strftime("%Y%m%d-%H%M%S-%f")
     filename = f"{prefix}_{timestamp}.jpg"
     path = os.path.join(folder, filename)
@@ -63,56 +68,73 @@ def save_frame(frame, folder="captured_images", prefix="frame"):
     return path
 
 def image_quality(image):
-    """Estimate sharpness using Laplacian variance."""
+    """Return sharpness estimate using Laplacian variance"""
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return cv2.Laplacian(gray, cv2.CV_64F).var()
 
+def get_haar_path():
+    """Return path to Haar cascade XML (forced to parent directory)"""
+    path = os.path.abspath(HAAR_CASCADE_PATH)
+    if not os.path.exists(path):
+        print(f"❌ Haar cascade not found at {path}")
+    else:
+        print(f"[INFO] Using Haar cascade from {path}")
+    return path
+
 def rotate_image(image, angle):
-    """Rotate image by angle (used for fallback detection)."""
+    """Rotate image around its center"""
     h, w = image.shape[:2]
     M = cv2.getRotationMatrix2D((w//2, h//2), angle, 1.0)
     return cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
 
-def extract_face_with_rotation(image):
+def extract_face_with_rotation(image, margin=DEFAULT_MARGIN, fallback_angles=FALLBACK_ANGLES):
     """
-    Detect face with fallback rotations.
-    Uses local Haar cascade (same folder).
-    Returns cropped face or None.
+    Detect and crop the largest face in the image.
+    Tries original + small rotations for robustness.
     """
-    if not os.path.exists(HAAR_PATH):
-        print(f"❌ Haar cascade not found at {HAAR_PATH}")
-        return None
+    haar_path = get_haar_path()
+    if not os.path.exists(haar_path):
+        print("❌ Haar cascade not found")
+        return image
 
-    def try_detect(img):
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        face_cascade = cv2.CascadeClassifier(HAAR_PATH)
-        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
-        if len(faces) == 0:
-            return None
-        x, y, w, h = faces[0]
-        return img[y:y+h, x:x+w]
+    cascade = cv2.CascadeClassifier(haar_path)
+    if cascade.empty():
+        print(f"❌ Failed to load cascade from {haar_path}")
+        return image
 
-    # Try normal orientation first
-    face = try_detect(image)
-    if face is not None:
-        return face
+    angles_to_try = [0] + fallback_angles
 
-    # Try fallback rotations
-    for angle in FALLBACK_ANGLES:
-        rotated = rotate_image(image, angle)
-        face = try_detect(rotated)
-        if face is not None:
-            print(f"[INFO] Detected face at angle {angle}")
-            return face
+    for angle in angles_to_try:
+        rotated = rotate_image(image, angle) if angle != 0 else image
+        gray = cv2.cvtColor(rotated, cv2.COLOR_BGR2GRAY)
+        faces = cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30,30))
 
-    print("[INFO] No face detected.")
-    return None
+        if len(faces) > 0:
+            # Pick largest face
+            x, y, w, h = max(faces, key=lambda r: r[2]*r[3])
+            m_w, m_h = int(w * margin), int(h * margin)
+            x1, y1 = max(x - m_w, 0), max(y - m_h, 0)
+            x2, y2 = min(x + w + m_w, rotated.shape[1]), min(y + h + m_h, rotated.shape[0])
+            face_crop = rotated[y1:y2, x1:x2]
+            print(f"[INFO] Face detected at angle {angle}, shape={face_crop.shape}")
+            return face_crop
+
+    print("[INFO] No face detected, returning original image")
+    return image
+
+def send_images_to_simulated_api(image_paths):
+    """Simulated API call for testing"""
+    print("🔹 Sending images to simulated API...")
+    for i, path in enumerate(image_paths):
+        print(f"  {path}")
+    time.sleep(2)  # simulate network delay
+    return {"status": "success", "processed_images": [os.path.basename(p) for p in image_paths]}
 
 # ---------------------------
 # CAMERA STREAM THREAD
 # ---------------------------
 def update_camera():
-    """Continuously grab frames and calculate FPS."""
+    """Continuously capture frames for live stream and overlay FPS"""
     global latest_frame
     prev_time = time.time()
     while True:
@@ -120,7 +142,7 @@ def update_camera():
         if frame is not None:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
             curr_time = time.time()
-            fps = 1.0 / (curr_time - prev_time) if curr_time - prev_time > 0 else 0
+            fps = 1.0 / (curr_time - prev_time) if curr_time-prev_time>0 else 0
             prev_time = curr_time
             cv2.putText(frame, f"FPS:{fps:.2f}", (10,30),
                         cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,255), 3, cv2.LINE_AA)
@@ -129,33 +151,11 @@ def update_camera():
                 frame_lock.notify_all()
         time.sleep(0.01)
 
-def generate_frames():
-    """Generate MJPEG stream for Flask video feed."""
-    global latest_frame
-    while True:
-        with frame_lock:
-            if latest_frame is None:
-                frame_lock.wait()
-                continue
-            frame = latest_frame.copy()
-        _, buffer = cv2.imencode('.jpg', frame)
-        yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
-        time.sleep(0.03)
-
-def capture_frames(count=CAPTURE_COUNT):
-    """Capture a series of frames for analysis."""
-    frames = []
-    while len(frames) < count:
-        with frame_lock:
-            if latest_frame is not None:
-                frames.append(latest_frame.copy())
-        time.sleep(0.01)
-    return frames
-
 # ---------------------------
 # HTML TEMPLATE
 # ---------------------------
-HTML_TEMPLATE = """<!DOCTYPE html>
+HTML_TEMPLATE = """
+<!DOCTYPE html>
 <html>
 <head>
 <title>Pi Camera Stream</title>
@@ -197,45 +197,61 @@ function capture() {
 }
 </script>
 </body>
-</html>"""
+</html>
+"""
 
 # ---------------------------
 # FLASK ROUTES
 # ---------------------------
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        frames = capture_frames()
-        if not frames:
-            return jsonify({'result': 'Failed to capture frames'}), 500
+@app.route("/", methods=["GET","POST"])
+def index_route():
+    if request.method == "POST":
+        # Capture burst
+        frames = []
+        interval = CAPTURE_DURATION / CAPTURE_BURST_COUNT
+        for _ in range(CAPTURE_BURST_COUNT):
+            frame = picam2.capture_array()
+            if frame is not None:
+                frames.append(cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR))
+            time.sleep(interval)
 
-        # Sort top N sharpest frames
+        # Save all captured frames
+        [save_frame(f, folder="captured_images", prefix=f"frame_{i}") for i,f in enumerate(frames)]
+
+        # Select top N sharpest
         frames_sorted = sorted(frames, key=image_quality, reverse=True)[:TOP_N]
 
-        cropped_faces = []
-        for i, frame in enumerate(frames_sorted):
-            face_crop = extract_face_with_rotation(frame)
-            if face_crop is not None:
-                path = save_frame(face_crop, folder="best", prefix=f"face_{i}")
-                cropped_faces.append(os.path.basename(path))
+        # Extract faces and save
+        best_paths = []
+        for i, f in enumerate(frames_sorted):
+            face_img = extract_face_with_rotation(f, margin=DEFAULT_MARGIN)
+            path = save_frame(face_img, folder="best", prefix=f"best_{i}")
+            best_paths.append(path)
 
-        result = {
-            "status": "success",
-            "faces_saved": cropped_faces,
-            "message": f"{len(cropped_faces)} faces cropped from top {TOP_N} frames."
-        }
-        return jsonify({'result': result})
+        api_result = send_images_to_simulated_api(best_paths)
+        return jsonify({"result": api_result})
 
     return render_template_string(HTML_TEMPLATE)
 
-@app.route('/video_feed')
+@app.route("/video_feed")
 def video_feed():
-    """MJPEG video streaming route."""
-    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    """MJPEG streaming route"""
+    def generate_frames():
+        global latest_frame
+        while True:
+            with frame_lock:
+                if latest_frame is None:
+                    frame_lock.wait()
+                    continue
+                frame = latest_frame.copy()
+            _, buffer = cv2.imencode(".jpg", frame)
+            yield (b"--frame\\r\\nContent-Type: image/jpeg\\r\\n\\r\\n" + buffer.tobytes() + b"\\r\\n")
+            time.sleep(0.03)
+    return Response(generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
 # ---------------------------
 # MAIN
 # ---------------------------
-if __name__ == '__main__':
+if __name__ == "__main__":
     threading.Thread(target=update_camera, daemon=True).start()
-    app.run(host='0.0.0.0', port=5001, threaded=True)
+    app.run(host="0.0.0.0", port=5001, threaded=True)
