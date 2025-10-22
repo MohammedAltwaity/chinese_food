@@ -73,9 +73,9 @@ def image_quality(image):
 
 def get_haar_path():
     """Return Haar cascade XML path"""
-    if hasattr(cv2, "data"):
-        return os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml")
-    return "/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml"
+
+    return "./haarcascade_frontalface_default.xml"
+
 
 def rotate_image(image, angle):
     """Rotate image around its center"""
