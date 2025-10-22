@@ -7,7 +7,8 @@ Features:
 - FPS overlay
 - Capture multiple frames in a burst
 - Save all captured frames in 'captured_images'
-- Select top 5 sharpest frames, apply face extraction with margin & rotation
+- Select top 5 sharpest frames
+- Apply robust face extraction with margin & rotation
 - Save best faces in 'best' folder
 - Send best faces to simulated API
 """
@@ -22,10 +23,10 @@ import os
 # ---------------------------
 # ⚙️ CONFIGURATION
 # ---------------------------
-CAPTURE_BURST_COUNT = 10          # Total frames per burst
-CAPTURE_DURATION = 1.2            # Duration of burst in seconds
-TOP_N = 5                         # Number of top frames to process
-DEFAULT_MARGIN = 0.25             # Margin around detected face (25%)
+CAPTURE_BURST_COUNT = 10            # Total frames per burst
+CAPTURE_DURATION = 1.2              # Duration of burst in seconds
+TOP_N = 5                           # Number of top frames to process
+DEFAULT_MARGIN = 0.25               # Margin around detected face (25%)
 FALLBACK_ANGLES = [-30, 30, -15, 15]  # Rotations for robust detection
 
 # ---------------------------
@@ -56,8 +57,9 @@ frame_lock = threading.Condition()
 # ---------------------------
 # 🖼 HELPER FUNCTIONS
 # ---------------------------
+
 def save_frame(frame, folder="captured_images", prefix="frame"):
-    """Save frame to disk with timestamp"""
+    """Save a frame to disk with timestamped filename"""
     timestamp = time.strftime("%Y%m%d-%H%M%S-%f")
     filename = f"{prefix}_{timestamp}.jpg"
     path = os.path.join(folder, filename)
@@ -75,29 +77,6 @@ def get_haar_path():
         return os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml")
     return "/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml"
 
-def extract_face(image, margin=DEFAULT_MARGIN):
-    """
-    Detect face and crop with margin.
-    Returns original image if no face detected.
-    """
-    haar_path = get_haar_path()
-    if not os.path.exists(haar_path):
-        print("❌ Haar cascade not found")
-        return image
-
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    cascade = cv2.CascadeClassifier(haar_path)
-    faces = cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
-
-    if len(faces) == 0:
-        return image  # No face found
-
-    x, y, w, h = faces[0]
-    m_w, m_h = int(w * margin), int(h * margin)
-    x1, y1 = max(x - m_w, 0), max(y - m_h, 0)
-    x2, y2 = min(x + w + m_w, image.shape[1]), min(y + h + m_h, image.shape[0])
-    return image[y1:y2, x1:x2]
-
 def rotate_image(image, angle):
     """Rotate image around its center"""
     h, w = image.shape[:2]
@@ -106,22 +85,34 @@ def rotate_image(image, angle):
 
 def extract_face_with_rotation(image, margin=DEFAULT_MARGIN, fallback_angles=FALLBACK_ANGLES):
     """
-    Attempt face detection with small rotations if necessary.
-    Returns cropped face or original image if none found.
+    Robust face extraction with rotation and margin.
+    Tries multiple rotations and selects largest detected face.
+    Returns cropped face or original image if no face detected.
     """
-    # Try original
-    face = extract_face(image, margin)
-    if face is not image:
-        return face
+    haar_path = get_haar_path()
+    if not os.path.exists(haar_path):
+        print("❌ Haar cascade not found")
+        return image
 
-    # Try rotated versions
-    for angle in fallback_angles:
-        rotated = rotate_image(image, angle)
-        face = extract_face(rotated, margin)
-        if face is not rotated:
-            return face
+    cascade = cv2.CascadeClassifier(haar_path)
+    angles_to_try = [0] + fallback_angles  # Start with no rotation
 
-    # Fallback: return original
+    for angle in angles_to_try:
+        rotated = rotate_image(image, angle) if angle != 0 else image
+        gray = cv2.cvtColor(rotated, cv2.COLOR_BGR2GRAY)
+        faces = cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+        if len(faces) > 0:
+            # Pick largest detected face
+            x, y, w, h = max(faces, key=lambda r: r[2]*r[3])
+            m_w, m_h = int(w * margin), int(h * margin)
+            x1, y1 = max(x - m_w, 0), max(y - m_h, 0)
+            x2, y2 = min(x + w + m_w, rotated.shape[1]), min(y + h + m_h, rotated.shape[0])
+            face_crop = rotated[y1:y2, x1:x2]
+            print(f"[INFO] Detected face at angle {angle}, shape: {face_crop.shape}")
+            return face_crop
+
+    # No face detected: return original
+    print("[INFO] No face detected, returning original image")
     return image
 
 def send_images_to_simulated_api(image_paths):
@@ -142,16 +133,15 @@ def send_images_to_simulated_api(image_paths):
 # 🖥 CAMERA STREAM THREAD
 # ---------------------------
 def update_camera():
-    """Continuously capture latest frame for live streaming"""
+    """Continuously capture latest frame for live streaming with FPS overlay"""
     global latest_frame
     prev_time = time.time()
     while True:
         frame = picam2.capture_array()
         if frame is not None:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
-            # Overlay FPS
             curr = time.time()
-            fps = 1.0 / (curr-prev_time) if curr-prev_time>0 else 0
+            fps = 1.0 / (curr - prev_time) if curr-prev_time>0 else 0
             prev_time = curr
             cv2.putText(frame, f"FPS:{fps:.2f}", (10,30),
                         cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,255), 3, cv2.LINE_AA)
@@ -240,7 +230,6 @@ def index_route():
 
         # 5️⃣ Send to simulated API
         api_result = send_images_to_simulated_api(best_paths)
-
         return jsonify({"result": api_result})
 
     return render_template_string(HTML_TEMPLATE)
