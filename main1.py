@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+"""
+Flask + PiCamera2 streaming server
+---------------------------------
+- Streams live video from Raspberry Pi Camera
+- Shows FPS overlay
+- Allows browser-side “Capture & Analyze” button
+- Automatically extracts and saves face crops with rotation fallback
+"""
+
 from flask import Flask, Response, render_template_string, request, jsonify
 from picamera2 import Picamera2
 import cv2
@@ -9,10 +18,12 @@ import os
 
 app = Flask(__name__)
 
-# ---------------- Camera Setup ----------------
+# ----------------------------------------------------------
+# 🟢 CAMERA INITIALIZATION
+# ----------------------------------------------------------
 picam2 = Picamera2()
 
-# Use 640x480 XRGB8888 stream — good balance between color and speed
+# Use 640x480 (XRGB8888) format — balanced between speed and color accuracy
 config = picam2.create_video_configuration(
     main={"size": (640, 480), "format": "XRGB8888"},
     buffer_count=2
@@ -20,14 +31,16 @@ config = picam2.create_video_configuration(
 picam2.configure(config)
 picam2.start()
 
-# Shared latest frame and a condition variable for safe access
+# Shared latest frame + lock for thread safety
 latest_frame = None
 frame_lock = threading.Condition()
 
 
-# ---------------- Frame Capture Thread ----------------
+# ----------------------------------------------------------
+# 📷 BACKGROUND CAMERA CAPTURE THREAD
+# ----------------------------------------------------------
 def update_camera():
-    """ Continuously capture frames from PiCamera2 """
+    """ Continuously capture frames and update latest_frame """
     global latest_frame
     prev_time = time.time()
 
@@ -35,38 +48,32 @@ def update_camera():
         frame = picam2.capture_array()
 
         if frame is not None:
-            # ✅ Fix color swap: IMX708 gives BGRA order for XRGB8888 format
+            # ✅ Fix color swap (IMX708 delivers BGRA for XRGB8888)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
 
-            # Compute FPS
+            # FPS calculation
             current_time = time.time()
             elapsed = current_time - prev_time
             prev_time = current_time
             fps = 1.0 / elapsed if elapsed > 0 else 0.0
 
-            # Draw FPS text on frame
-            cv2.putText(
-                frame,
-                f"FPS: {fps:.2f}",
-                (10, 30),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1.0,
-                (0, 0, 255),
-                3,
-                cv2.LINE_AA
-            )
+            # Draw FPS overlay
+            cv2.putText(frame, f"FPS: {fps:.2f}", (10, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 3, cv2.LINE_AA)
 
-            # Store the frame safely
+            # Save to shared variable
             with frame_lock:
                 latest_frame = frame
                 frame_lock.notify_all()
 
-        time.sleep(0.01)  # prevent 100% CPU load
+        time.sleep(0.01)  # prevent full CPU usage
 
 
-# ---------------- Utility Functions ----------------
+# ----------------------------------------------------------
+# 💾 HELPER FUNCTIONS
+# ----------------------------------------------------------
 def save_frame(frame, prefix="capture"):
-    """Save frame to disk with timestamp."""
+    """Save the frame to disk with timestamp."""
     timestamp = time.strftime("%Y%m%d-%H%M%S")
     filename = f"{prefix}_{timestamp}.jpg"
     path = os.path.join(os.getcwd(), filename)
@@ -83,14 +90,31 @@ def rotate_image(image, angle):
     return cv2.warpAffine(image, matrix, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
 
 
+def get_haar_path():
+    """
+    Return path to Haar cascade XML.
+    Some Pi builds of OpenCV lack `cv2.data`, so we handle both cases.
+    """
+    if hasattr(cv2, "data"):
+        return os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml")
+    # fallback path (works on Raspberry Pi)
+    return "/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml"
+
+
 def extract_face_with_rotation(image, margin=0.2, fallback_angles=[-30, 30, -15, 15]):
-    """Try to detect and crop a face, rotating if needed."""
+    """Try to detect and crop a face, retrying with small rotations."""
+    haar_path = get_haar_path()
+    if not os.path.exists(haar_path):
+        print(f"❌ Haar cascade file not found: {haar_path}")
+        return None
+
     def try_extract(img):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+        face_cascade = cv2.CascadeClassifier(haar_path)
         faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
         if len(faces) == 0:
             return None
+        # take the first detected face
         x, y, w, h = faces[0]
         m_w = int(w * margin)
         m_h = int(h * (margin + 0.5))
@@ -98,13 +122,13 @@ def extract_face_with_rotation(image, margin=0.2, fallback_angles=[-30, 30, -15,
         x2, y2 = min(x + w + m_w, img.shape[1]), min(y + h + m_h, img.shape[0])
         return img[y1:y2, x1:x2]
 
-    # Try without rotation first
+    # Try normal first
     face_crop = try_extract(image)
     if face_crop is not None:
         print("✅ Face found (no rotation).")
         return face_crop
 
-    # Try fallback rotations
+    # Try rotated versions
     for angle in fallback_angles:
         rotated = rotate_image(image, angle)
         face_crop = try_extract(rotated)
@@ -117,12 +141,14 @@ def extract_face_with_rotation(image, margin=0.2, fallback_angles=[-30, 30, -15,
 
 
 def image_quality(image):
-    """Estimate image sharpness using Laplacian variance."""
+    """Return sharpness estimate using Laplacian variance."""
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return cv2.Laplacian(gray, cv2.CV_64F).var()
 
 
-# ---------------- HTML Template ----------------
+# ----------------------------------------------------------
+# 🌐 FRONTEND HTML (INLINE TEMPLATE)
+# ----------------------------------------------------------
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
@@ -172,11 +198,13 @@ HTML_TEMPLATE = """
 """
 
 
-# ---------------- Flask Routes ----------------
+# ----------------------------------------------------------
+# 🌍 FLASK ROUTES
+# ----------------------------------------------------------
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Capture a few frames, choose the sharpest
+        # Capture a few frames and pick the sharpest
         frames = []
         for _ in range(4):
             with frame_lock:
@@ -189,14 +217,14 @@ def index():
 
         best_frame = max(frames, key=image_quality)
 
-        # Try to extract a face
+        # Try extracting face
         cropped = extract_face_with_rotation(best_frame)
         if cropped is not None:
             save_frame(cropped, "face_crop")
         else:
             print("⚠️ No face found to save.")
 
-        # Example returned result
+        # Example JSON response
         result = {"name": "Mohammed", "data": ["Has Facebook"]}
         return jsonify({'result': result})
 
@@ -205,7 +233,7 @@ def index():
 
 @app.route('/video_feed')
 def video_feed():
-    """Stream live JPEG frames from the camera."""
+    """Continuous video streaming route."""
     def generate_frames():
         global latest_frame
         while True:
@@ -218,10 +246,13 @@ def video_feed():
             _, buffer = cv2.imencode('.jpg', frame)
             yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
             time.sleep(0.03)
+
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-# ---------------- Run Flask App ----------------
+# ----------------------------------------------------------
+# 🚀 APP ENTRY POINT
+# ----------------------------------------------------------
 if __name__ == '__main__':
     threading.Thread(target=update_camera, daemon=True).start()
     app.run(host='0.0.0.0', port=5001, threaded=True)
