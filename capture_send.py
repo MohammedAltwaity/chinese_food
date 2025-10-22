@@ -6,10 +6,10 @@ Features:
 - Live video streaming from Raspberry Pi Camera
 - FPS overlay
 - Capture multiple frames in a burst
-- Save all captured frames to `captured_images`
+- Save all captured frames in 'captured_images'
 - Select top 5 sharpest frames, apply face extraction with margin & rotation
-- Save best frames to `best` folder
-- Send best frames to simulated API and display response
+- Save best faces in 'best' folder
+- Send best faces to simulated API
 """
 
 from flask import Flask, Response, render_template_string, request, jsonify
@@ -22,11 +22,11 @@ import os
 # ---------------------------
 # ⚙️ CONFIGURATION
 # ---------------------------
-CAPTURE_BURST_COUNT = 10            # Total frames per burst
-CAPTURE_DURATION = 1.2              # Seconds for burst
-TOP_N = 5                           # Best N frames
-DEFAULT_MARGIN = 0.25               # 25% margin around detected face
-FALLBACK_ANGLES = [-30, 30, -15, 15]  # Try these rotations if face not detected
+CAPTURE_BURST_COUNT = 10          # Total frames per burst
+CAPTURE_DURATION = 1.2            # Duration of burst in seconds
+TOP_N = 5                         # Number of top frames to process
+DEFAULT_MARGIN = 0.25             # Margin around detected face (25%)
+FALLBACK_ANGLES = [-30, 30, -15, 15]  # Rotations for robust detection
 
 # ---------------------------
 # 📁 FOLDERS
@@ -56,9 +56,8 @@ frame_lock = threading.Condition()
 # ---------------------------
 # 🖼 HELPER FUNCTIONS
 # ---------------------------
-
 def save_frame(frame, folder="captured_images", prefix="frame"):
-    """Save a frame to disk with timestamped filename"""
+    """Save frame to disk with timestamp"""
     timestamp = time.strftime("%Y%m%d-%H%M%S-%f")
     filename = f"{prefix}_{timestamp}.jpg"
     path = os.path.join(folder, filename)
@@ -94,14 +93,13 @@ def extract_face(image, margin=DEFAULT_MARGIN):
         return image  # No face found
 
     x, y, w, h = faces[0]
-    # Add margin around face
     m_w, m_h = int(w * margin), int(h * margin)
     x1, y1 = max(x - m_w, 0), max(y - m_h, 0)
     x2, y2 = min(x + w + m_w, image.shape[1]), min(y + h + m_h, image.shape[0])
     return image[y1:y2, x1:x2]
 
 def rotate_image(image, angle):
-    """Rotate image around center"""
+    """Rotate image around its center"""
     h, w = image.shape[:2]
     M = cv2.getRotationMatrix2D((w//2, h//2), angle, 1.0)
     return cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
@@ -153,10 +151,10 @@ def update_camera():
             frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
             # Overlay FPS
             curr = time.time()
-            fps = 1.0 / (curr - prev_time) if curr-prev_time>0 else 0
+            fps = 1.0 / (curr-prev_time) if curr-prev_time>0 else 0
             prev_time = curr
             cv2.putText(frame, f"FPS:{fps:.2f}", (10,30),
-                        cv2.FONT_HERSHEY_SIMPLEX,1.0,(0,0,255),3,cv2.LINE_AA)
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,255), 3, cv2.LINE_AA)
             with frame_lock:
                 latest_frame = frame
                 frame_lock.notify_all()
@@ -217,30 +215,30 @@ function capture() {
 @app.route("/", methods=["GET","POST"])
 def index_route():
     if request.method == "POST":
-        # Capture burst directly from camera
+        # 1️⃣ Capture burst
         frames = []
         interval = CAPTURE_DURATION / CAPTURE_BURST_COUNT
-        for i in range(CAPTURE_BURST_COUNT):
+        for _ in range(CAPTURE_BURST_COUNT):
             frame = picam2.capture_array()
             if frame is not None:
                 frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
                 frames.append(frame)
             time.sleep(interval)
 
-        # Save all captured frames
-        captured_paths = [save_frame(f, folder="captured_images", prefix=f"frame_{i}") for i,f in enumerate(frames)]
+        # 2️⃣ Save all captured frames
+        [save_frame(f, folder="captured_images", prefix=f"frame_{i}") for i,f in enumerate(frames)]
 
-        # Select TOP_N best frames by sharpness
+        # 3️⃣ Select top N by sharpness
         frames_sorted = sorted(frames, key=image_quality, reverse=True)[:TOP_N]
 
-        # Apply face extraction with rotation & margin
+        # 4️⃣ Extract faces and save best
         best_paths = []
         for i, f in enumerate(frames_sorted):
             face_img = extract_face_with_rotation(f, margin=DEFAULT_MARGIN, fallback_angles=FALLBACK_ANGLES)
             path = save_frame(face_img, folder="best", prefix=f"best_{i}")
             best_paths.append(path)
 
-        # Send to simulated API
+        # 5️⃣ Send to simulated API
         api_result = send_images_to_simulated_api(best_paths)
 
         return jsonify({"result": api_result})
