@@ -28,7 +28,6 @@ CAPTURE_DURATION = 1.2            # Duration in seconds for burst
 TOP_N = 5                         # Number of sharpest frames to keep
 DEFAULT_MARGIN = 0.1              # Margin around face (10% of width/height)
 FALLBACK_ANGLES = [-30, 30, -15, 15]  # Rotations for robust detection
-HAAR_CASCADE_PATH = "../haarcascade_frontalface_default.xml"  # Custom cascade path
 
 # ---------------------------
 # FOLDER SETUP
@@ -73,13 +72,10 @@ def image_quality(image):
     return cv2.Laplacian(gray, cv2.CV_64F).var()
 
 def get_haar_path():
-    """Return path to Haar cascade XML (forced to parent directory)"""
-    path = os.path.abspath(HAAR_CASCADE_PATH)
-    if not os.path.exists(path):
-        print(f"❌ Haar cascade not found at {path}")
-    else:
-        print(f"[INFO] Using Haar cascade from {path}")
-    return path
+    """Return path to Haar cascade XML"""
+    if hasattr(cv2, "data"):
+        return os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml")
+    return "/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml"
 
 def rotate_image(image, angle):
     """Rotate image around its center"""
@@ -98,10 +94,6 @@ def extract_face_with_rotation(image, margin=DEFAULT_MARGIN, fallback_angles=FAL
         return image
 
     cascade = cv2.CascadeClassifier(haar_path)
-    if cascade.empty():
-        print(f"❌ Failed to load cascade from {haar_path}")
-        return image
-
     angles_to_try = [0] + fallback_angles
 
     for angle in angles_to_try:
@@ -245,7 +237,7 @@ def video_feed():
                     continue
                 frame = latest_frame.copy()
             _, buffer = cv2.imencode(".jpg", frame)
-            yield (b"--frame\\r\\nContent-Type: image/jpeg\\r\\n\\r\\n" + buffer.tobytes() + b"\\r\\n")
+            yield (b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + buffer.tobytes() + b"\r\n")
             time.sleep(0.03)
     return Response(generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
