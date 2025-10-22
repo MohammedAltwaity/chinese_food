@@ -28,7 +28,7 @@ CAPTURE_DURATION = 1.2            # Duration in seconds for burst
 TOP_N = 5                         # Number of sharpest frames to keep
 DEFAULT_MARGIN = 0.1              # Margin around face (10% of width/height)
 FALLBACK_ANGLES = [-30, 30, -15, 15]  # Rotations for robust detection
-HAAR_CASCADE_PATH = "/home/pi/haarcascade_frontalface_default.xml"  # <-- fixed path
+HAAR_CASCADE_PATH = "../haarcascade_frontalface_default.xml"  # <-- fixed path
 
 # ---------------------------
 # FOLDER SETUP
