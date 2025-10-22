@@ -12,28 +12,20 @@ app = Flask(__name__)
 # ---------------- Camera Setup ----------------
 picam2 = Picamera2()
 
-# Configure for 16:9 or 4:3 aspect ratio depending on your calibration
+# Use 640x480 XRGB8888 stream — good balance between color and speed
 config = picam2.create_video_configuration(
-    main={"size": (640, 480), "format": "XRGB8888"},  # good for OpenCV
+    main={"size": (640, 480), "format": "XRGB8888"},
     buffer_count=2
 )
 picam2.configure(config)
 picam2.start()
 
-# Optional: Control camera exposure / gain / white balance
-picam2.set_controls({
-    "AwbMode": "auto",
-    "Brightness": 0.0,
-    "Contrast": 1.0,
-    "ExposureTime": 10000,  # microseconds (adjust as needed)
-    "AnalogueGain": 1.0
-})
-
-# Shared latest frame and a condition variable
+# Shared latest frame and a condition variable for safe access
 latest_frame = None
 frame_lock = threading.Condition()
 
-# ---------------- Frame Updater ----------------
+
+# ---------------- Frame Capture Thread ----------------
 def update_camera():
     """ Continuously capture frames from PiCamera2 """
     global latest_frame
@@ -41,16 +33,18 @@ def update_camera():
 
     while True:
         frame = picam2.capture_array()
-        if frame is not None:
-            frame = cv2.cvtColor(frame, cv2.COLOR_RGBA2BGR)
 
-            # Calculate FPS
+        if frame is not None:
+            # ✅ Fix color swap: IMX708 gives BGRA order for XRGB8888 format
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
+
+            # Compute FPS
             current_time = time.time()
             elapsed = current_time - prev_time
             prev_time = current_time
-            fps = 1.0 / elapsed if elapsed > 0 else 0
+            fps = 1.0 / elapsed if elapsed > 0 else 0.0
 
-            # Draw FPS overlay
+            # Draw FPS text on frame
             cv2.putText(
                 frame,
                 f"FPS: {fps:.2f}",
@@ -67,7 +61,65 @@ def update_camera():
                 latest_frame = frame
                 frame_lock.notify_all()
 
-        time.sleep(0.01)  # avoid 100% CPU usage
+        time.sleep(0.01)  # prevent 100% CPU load
+
+
+# ---------------- Utility Functions ----------------
+def save_frame(frame, prefix="capture"):
+    """Save frame to disk with timestamp."""
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    filename = f"{prefix}_{timestamp}.jpg"
+    path = os.path.join(os.getcwd(), filename)
+    cv2.imwrite(path, frame)
+    print(f"✅ Saved frame: {path}")
+    return path
+
+
+def rotate_image(image, angle):
+    """Rotate image around its center."""
+    h, w = image.shape[:2]
+    center = (w // 2, h // 2)
+    matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
+    return cv2.warpAffine(image, matrix, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+
+
+def extract_face_with_rotation(image, margin=0.2, fallback_angles=[-30, 30, -15, 15]):
+    """Try to detect and crop a face, rotating if needed."""
+    def try_extract(img):
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
+        if len(faces) == 0:
+            return None
+        x, y, w, h = faces[0]
+        m_w = int(w * margin)
+        m_h = int(h * (margin + 0.5))
+        x1, y1 = max(x - m_w, 0), max(y - m_h, 0)
+        x2, y2 = min(x + w + m_w, img.shape[1]), min(y + h + m_h, img.shape[0])
+        return img[y1:y2, x1:x2]
+
+    # Try without rotation first
+    face_crop = try_extract(image)
+    if face_crop is not None:
+        print("✅ Face found (no rotation).")
+        return face_crop
+
+    # Try fallback rotations
+    for angle in fallback_angles:
+        rotated = rotate_image(image, angle)
+        face_crop = try_extract(rotated)
+        if face_crop is not None:
+            print(f"✅ Face found after rotating {angle}°.")
+            return face_crop
+
+    print("⚠️ No face detected.")
+    return None
+
+
+def image_quality(image):
+    """Estimate image sharpness using Laplacian variance."""
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    return cv2.Laplacian(gray, cv2.CV_64F).var()
 
 
 # ---------------- HTML Template ----------------
@@ -119,57 +171,12 @@ HTML_TEMPLATE = """
 </html>
 """
 
-# ---------------- Helper Functions ----------------
-def save_frame(frame, prefix="capture"):
-    timestamp = time.strftime("%Y%m%d-%H%M%S")
-    filename = f"{prefix}_{timestamp}.jpg"
-    path = os.path.join(os.getcwd(), filename)
-    cv2.imwrite(path, frame)
-    print(f"Saved frame to {path}")
-
-def rotate_image(image, angle):
-    h, w = image.shape[:2]
-    center = (w // 2, h // 2)
-    matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
-    return cv2.warpAffine(image, matrix, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-
-def extract_face_with_rotation(image, margin=0.2, fallback_angles=[-30, 30, -15, 15]):
-    def try_extract(img):
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
-        if len(faces) == 0:
-            return None
-        x, y, w, h = faces[0]
-        m_w = int(w * margin)
-        m_h = int(h * (margin + 0.5))
-        x1, y1 = max(x - m_w, 0), max(y - m_h, 0)
-        x2, y2 = min(x + w + m_w, img.shape[1]), min(y + h + m_h, img.shape[0])
-        return img[y1:y2, x1:x2]
-
-    face_crop = try_extract(image)
-    if face_crop is not None:
-        print("Face found (no rotation).")
-        return face_crop
-
-    for angle in fallback_angles:
-        rotated = rotate_image(image, angle)
-        face_crop = try_extract(rotated)
-        if face_crop is not None:
-            print(f"Face found after rotating {angle}°.")
-            return face_crop
-
-    print("No face found.")
-    return None
-
-def image_quality(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    return cv2.Laplacian(gray, cv2.CV_64F).var()
 
 # ---------------- Flask Routes ----------------
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        # Capture a few frames, choose the sharpest
         frames = []
         for _ in range(4):
             with frame_lock:
@@ -181,19 +188,24 @@ def index():
             return jsonify({'result': 'Failed to capture frames'}), 500
 
         best_frame = max(frames, key=image_quality)
+
+        # Try to extract a face
         cropped = extract_face_with_rotation(best_frame)
         if cropped is not None:
-            save_frame(cropped, "cropped")
+            save_frame(cropped, "face_crop")
         else:
-            print("No face found — nothing to save.")
+            print("⚠️ No face found to save.")
 
-        result = {"name": "Mohammed", "data": ["Has facebook"]}
+        # Example returned result
+        result = {"name": "Mohammed", "data": ["Has Facebook"]}
         return jsonify({'result': result})
 
     return render_template_string(HTML_TEMPLATE)
 
+
 @app.route('/video_feed')
 def video_feed():
+    """Stream live JPEG frames from the camera."""
     def generate_frames():
         global latest_frame
         while True:
@@ -202,10 +214,12 @@ def video_feed():
                     frame_lock.wait()
                     continue
                 frame = latest_frame.copy()
+
             _, buffer = cv2.imencode('.jpg', frame)
             yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
             time.sleep(0.03)
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 # ---------------- Run Flask App ----------------
 if __name__ == '__main__':
