@@ -28,6 +28,7 @@ CAPTURE_DURATION = 1.2            # Duration in seconds for burst
 TOP_N = 5                         # Number of sharpest frames to keep
 DEFAULT_MARGIN = 0.1              # Margin around face (10% of width/height)
 FALLBACK_ANGLES = [-30, 30, -15, 15]  # Rotations for robust detection
+HAAR_CASCADE_PATH = "../haarcascade_frontalface_default.xml"  # <-- fixed path
 
 # ---------------------------
 # FOLDER SETUP
@@ -72,10 +73,8 @@ def image_quality(image):
     return cv2.Laplacian(gray, cv2.CV_64F).var()
 
 def get_haar_path():
-    """Return path to Haar cascade XML"""
-    if hasattr(cv2, "data"):
-        return os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml")
-    return "/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml"
+    """Return fixed path to Haar cascade XML"""
+    return HAAR_CASCADE_PATH
 
 def rotate_image(image, angle):
     """Rotate image around its center"""
