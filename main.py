@@ -6,7 +6,7 @@ Features:
 - Live video streaming from Raspberry Pi Camera
 - FPS overlay
 - Capture multiple frames
-- Select sharpest frame
+- Select top sharpest frames
 - Robust face extraction with fallback rotations
 - Save cropped faces
 """
@@ -21,8 +21,9 @@ import os
 # ---------------------------
 # CONFIGURATION
 # ---------------------------
-CAPTURE_COUNT = 5  # Number of frames to capture for analysis
-FALLBACK_ANGLES = [-30, 30, -15, 15]  # Rotations to improve face detection
+CAPTURE_COUNT = 10         # Total frames to capture
+TOP_N = 5                  # Number of top sharp frames to try face extraction
+FALLBACK_ANGLES = [-30, 30, -15, 15]  # Rotations for robust detection
 
 # ---------------------------
 # FOLDER SETUP
@@ -53,7 +54,6 @@ frame_lock = threading.Condition()
 # HELPER FUNCTIONS
 # ---------------------------
 def save_frame(frame, folder="captured_images", prefix="frame"):
-    """Save frame to disk with timestamped filename."""
     timestamp = time.strftime("%Y%m%d-%H%M%S-%f")
     filename = f"{prefix}_{timestamp}.jpg"
     path = os.path.join(folder, filename)
@@ -61,22 +61,16 @@ def save_frame(frame, folder="captured_images", prefix="frame"):
     return path
 
 def image_quality(image):
-    """Return sharpness estimate using Laplacian variance."""
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return cv2.Laplacian(gray, cv2.CV_64F).var()
 
 def rotate_image(image, angle):
-    """Rotate image around its center."""
     h, w = image.shape[:2]
     M = cv2.getRotationMatrix2D((w//2, h//2), angle, 1.0)
     return cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
 
 def extract_face_with_rotation(image):
-    """
-    Detect and crop the first face found.
-    Tries original + fallback rotations.
-    Returns cropped face or None if no face found.
-    """
+    """Detect face, try fallback rotations if needed, return cropped face or None."""
     def try_detect(img):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
@@ -86,25 +80,20 @@ def extract_face_with_rotation(image):
         x, y, w, h = faces[0]
         return img[y:y+h, x:x+w]
 
-    # Try original image
     face = try_detect(image)
     if face is not None:
         return face
-
-    # Try fallback rotations
     for angle in FALLBACK_ANGLES:
         rotated = rotate_image(image, angle)
         face = try_detect(rotated)
         if face is not None:
             return face
-
     return None
 
 # ---------------------------
 # CAMERA STREAM THREAD
 # ---------------------------
 def update_camera():
-    """Continuously capture frames and overlay FPS."""
     global latest_frame
     prev_time = time.time()
     while True:
@@ -112,7 +101,7 @@ def update_camera():
         if frame is not None:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
             curr_time = time.time()
-            fps = 1.0 / (curr_time - prev_time) if curr_time-prev_time > 0 else 0
+            fps = 1.0 / (curr_time - prev_time) if curr_time-prev_time>0 else 0
             prev_time = curr_time
             cv2.putText(frame, f"FPS:{fps:.2f}", (10,30),
                         cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,255), 3, cv2.LINE_AA)
@@ -122,7 +111,6 @@ def update_camera():
         time.sleep(0.01)
 
 def generate_frames():
-    """MJPEG stream generator."""
     global latest_frame
     while True:
         with frame_lock:
@@ -135,7 +123,6 @@ def generate_frames():
         time.sleep(0.03)
 
 def capture_frames(count=CAPTURE_COUNT):
-    """Capture multiple frames for analysis."""
     frames = []
     while len(frames) < count:
         with frame_lock:
@@ -201,18 +188,21 @@ def index():
         if not frames:
             return jsonify({'result': 'Failed to capture frames'}), 500
 
-        # Pick the sharpest frame
-        best_frame = max(frames, key=image_quality)
+        # Sort top N sharpest frames
+        frames_sorted = sorted(frames, key=image_quality, reverse=True)[:TOP_N]
 
-        # Extract face (no margin)
-        face_crop = extract_face_with_rotation(best_frame)
-        if face_crop is not None:
-            save_frame(face_crop, folder="best", prefix="face")
-        else:
-            print("No face detected.")
+        cropped_faces = []
+        for i, frame in enumerate(frames_sorted):
+            face_crop = extract_face_with_rotation(frame)
+            if face_crop is not None:
+                path = save_frame(face_crop, folder="best", prefix=f"face_{i}")
+                cropped_faces.append(os.path.basename(path))
 
-        # Simulate API result
-        result = {"status": "success", "message": "Face processed."}
+        result = {
+            "status": "success",
+            "faces_saved": cropped_faces,
+            "message": f"{len(cropped_faces)} faces cropped from top {TOP_N} frames."
+        }
         return jsonify({'result': result})
 
     return render_template_string(HTML_TEMPLATE)
