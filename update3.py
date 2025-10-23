@@ -3,15 +3,12 @@
 Flask + PiCamera2 Streaming and Analysis Server
 ------------------------------------------------
 Features:
-- Live video streaming from Raspberry Pi Camera
-- Overlay FPS on live feed
-- Capture multiple frames in a burst
-- Save all captured frames in 'captured_images'
-- Select top N sharpest frames
-- Robust face extraction with margin and small rotations
-- Save best frames in 'best' and extracted faces in 'extracted_faces'
-- Select the most frontal (least rotated) face into 'final_result'
-- Send best frames to simulated API
+- Live video streaming with FPS overlay
+- Burst capture with top sharpest frame selection
+- Face detection and extraction with margin
+- Save best frames and extracted faces
+- Select the most frontal (least rotated) face using symmetry analysis
+- Save results with timestamp filenames
 """
 
 from flask import Flask, Response, render_template_string, request, jsonify
@@ -20,7 +17,7 @@ import cv2
 import threading
 import time
 import os
-import numpy as np   # ✅ added
+import numpy as np
 
 # ---------------------------
 # CONFIGURATION
@@ -29,7 +26,6 @@ CAPTURE_BURST_COUNT = 10
 CAPTURE_DURATION = 1.2
 TOP_N = 5
 DEFAULT_MARGIN = 0.1
-FALLBACK_ANGLES = [-30, 30, -15, 15]
 HAAR_CASCADE_PATH = "/home/pi/mohammed/haarcascade_frontalface_default.xml"
 
 # ---------------------------
@@ -38,7 +34,7 @@ HAAR_CASCADE_PATH = "/home/pi/mohammed/haarcascade_frontalface_default.xml"
 os.makedirs("captured_images", exist_ok=True)
 os.makedirs("best", exist_ok=True)
 os.makedirs("extracted_faces", exist_ok=True)
-os.makedirs("final_result", exist_ok=True)  # ✅ new folder
+os.makedirs("final_result", exist_ok=True)
 
 # ---------------------------
 # FLASK APP
@@ -63,7 +59,7 @@ frame_lock = threading.Condition()
 # HELPER FUNCTIONS
 # ---------------------------
 def save_frame(frame, folder="captured_images", prefix="frame"):
-    """Save a frame to disk with timestamped filename"""
+    """Save a frame with timestamped filename"""
     timestamp = time.strftime("%Y%m%d-%H%M%S-%f")
     filename = f"{prefix}_{timestamp}.jpg"
     path = os.path.join(folder, filename)
@@ -71,7 +67,7 @@ def save_frame(frame, folder="captured_images", prefix="frame"):
     return path
 
 def image_quality(image):
-    """Return sharpness estimate using Laplacian variance"""
+    """Return image sharpness based on Laplacian variance"""
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return cv2.Laplacian(gray, cv2.CV_64F).var()
 
@@ -79,118 +75,94 @@ def get_haar_path():
     """Return Haar cascade path"""
     return HAAR_CASCADE_PATH
 
-def rotate_image(image, angle):
-    """Rotate image around its center"""
-    h, w = image.shape[:2]
-    M = cv2.getRotationMatrix2D((w//2, h//2), angle, 1.0)
-    return cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-
-def extract_face_with_rotation(image, margin=DEFAULT_MARGIN, fallback_angles=FALLBACK_ANGLES):
-    """Detect and crop the largest face using rotation fallback"""
-    haar_path = get_haar_path()
-    if not os.path.exists(haar_path):
-        print("❌ Haar cascade not found")
-        return image
-
-    cascade = cv2.CascadeClassifier(haar_path)
-    angles_to_try = [0] + fallback_angles
-
-    for angle in angles_to_try:
-        rotated = rotate_image(image, angle) if angle != 0 else image
-        gray = cv2.cvtColor(rotated, cv2.COLOR_BGR2GRAY)
-        faces = cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30,30))
-
-        if len(faces) > 0:
-            x, y, w, h = max(faces, key=lambda r: r[2]*r[3])
-            m_w, m_h = int(w * margin), int(h * margin)
-            x1, y1 = max(x - m_w, 0), max(y - m_h, 0)
-            x2, y2 = min(x + w + m_w, rotated.shape[1]), min(y + h + m_h, rotated.shape[0])
-            face_crop = rotated[y1:y2, x1:x2]
-            print(f"[INFO] Face detected at angle {angle}, shape={face_crop.shape}")
-            return face_crop
-
-    print("[INFO] No face detected, returning original image")
-    return image
-
 def extract_all_faces(image, margin=DEFAULT_MARGIN):
     """Detect and extract all faces (no rotation)"""
     haar_path = get_haar_path()
     if not os.path.exists(haar_path):
-        print("❌ Haar cascade not found")
+        print("❌ Haar cascade not found:", haar_path)
         return []
 
     cascade = cv2.CascadeClassifier(haar_path)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    faces = cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30,30))
-
+    faces = cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
     crops = []
+
     for (x, y, w, h) in faces:
         m_w, m_h = int(w * margin), int(h * margin)
         x1, y1 = max(x - m_w, 0), max(y - m_h, 0)
         x2, y2 = min(x + w + m_w, image.shape[1]), min(y + h + m_h, image.shape[0])
-        face_crop = image[y1:y2, x1:x2]
-        crops.append(face_crop)
+        crops.append(image[y1:y2, x1:x2])
+
     return crops
 
 def send_images_to_simulated_api(image_paths):
-    """Simulated API call for testing"""
+    """Simulated API upload"""
     print("🔹 Sending images to simulated API...")
-    for path in image_paths:
-        print(f"  {path}")
+    for p in image_paths:
+        print("   ", p)
     time.sleep(2)
     return {"status": "success", "processed_images": [os.path.basename(p) for p in image_paths]}
 
 # ---------------------------
-# NEW FUNCTION: Select most frontal (least rotated) face
+# SELECT MOST FRONTAL FACE
 # ---------------------------
+def symmetry_score(image):
+    """Compute horizontal symmetry score (lower = more frontal)"""
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    flipped = cv2.flip(gray, 1)
+    diff = np.abs(gray - flipped)
+    mask = gray > 20  # ignore dark background
+    score = np.mean(diff[mask]) if np.any(mask) else np.mean(diff)
+    return score
+
 def select_most_frontal_face(folder="extracted_faces"):
-    """Select the most frontal face based on horizontal symmetry and save with timestamp"""
-    face_files = [os.path.join(folder, f) for f in os.listdir(folder) if f.endswith(".jpg")]
+    """Select and save most frontal face based on symmetry"""
+    face_files = [os.path.join(folder, f) for f in os.listdir(folder) if f.lower().endswith(".jpg")]
     if not face_files:
-        print("[INFO] No faces to evaluate for frontal selection.")
+        print("[INFO] No extracted faces found.")
         return None
 
-    min_score = float("inf")
-    best_face_path = None
+    best_path = None
+    best_score = float("inf")
 
-    for fpath in face_files:
-        img = cv2.imread(fpath)
-        if img is None:
+    for f in face_files:
+        img = cv2.imread(f)
+        if img is None or img.size == 0:
             continue
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        flipped = cv2.flip(gray, 1)
-        diff_score = np.mean(np.abs(gray - flipped))  # low score = more symmetric
-        print(f"[DEBUG] {fpath} symmetry score = {diff_score:.2f}")
-        if diff_score < min_score:
-            min_score = diff_score
-            best_face_path = fpath
+        score = symmetry_score(img)
+        print(f"[DEBUG] {os.path.basename(f)} → symmetry={score:.3f}")
+        if score < best_score:
+            best_score = score
+            best_path = f
 
-    if best_face_path:
-        img = cv2.imread(best_face_path)
+    if best_path:
+        img = cv2.imread(best_path)
         timestamp = time.strftime("%Y%m%d-%H%M%S-%f")
         final_path = os.path.join("final_result", f"best_face_{timestamp}.jpg")
         cv2.imwrite(final_path, img)
-        print(f"[INFO] Best frontal face saved as {final_path}")
+        print(f"[INFO] ✅ Most frontal face saved: {final_path}")
         return final_path
-
-    return None
-
+    else:
+        print("[INFO] No valid frontal face found.")
+        return None
 
 # ---------------------------
 # CAMERA STREAM THREAD
 # ---------------------------
 def update_camera():
+    """Continuously capture frames and update global variable"""
     global latest_frame
     prev_time = time.time()
+
     while True:
         frame = picam2.capture_array()
         if frame is not None:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
             curr_time = time.time()
-            fps = 1.0 / (curr_time - prev_time) if curr_time - prev_time > 0 else 0
+            fps = 1.0 / (curr_time - prev_time) if curr_time > prev_time else 0
             prev_time = curr_time
-            cv2.putText(frame, f"FPS:{fps:.2f}", (10,30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,255), 3, cv2.LINE_AA)
+            cv2.putText(frame, f"FPS:{fps:.2f}", (10, 30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 3)
             with frame_lock:
                 latest_frame = frame
                 frame_lock.notify_all()
@@ -227,7 +199,7 @@ button:hover { background:#5C6BC0; }
 <script>
 function capture() {
     document.getElementById("status").innerText="Capturing...";
-    document.getElementById("result").innerText="Waiting...";
+    document.getElementById("result").innerText="Processing...";
     fetch("/", {method:"POST"})
         .then(r=>r.json())
         .then(data=>{
@@ -246,22 +218,26 @@ function capture() {
 # ---------------------------
 # FLASK ROUTES
 # ---------------------------
-@app.route("/", methods=["GET","POST"])
+@app.route("/", methods=["GET", "POST"])
 def index_route():
     if request.method == "POST":
         frames = []
         interval = CAPTURE_DURATION / CAPTURE_BURST_COUNT
+
+        # Capture burst
         for _ in range(CAPTURE_BURST_COUNT):
             frame = picam2.capture_array()
             if frame is not None:
                 frames.append(cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR))
             time.sleep(interval)
 
-        [save_frame(f, folder="captured_images", prefix=f"frame_{i}") for i, f in enumerate(frames)]
+        # Save raw burst frames
+        for i, f in enumerate(frames):
+            save_frame(f, folder="captured_images", prefix=f"frame_{i}")
 
+        # Select top N sharpest
         frames_sorted = sorted(frames, key=image_quality, reverse=True)[:TOP_N]
-        best_paths = []
-        extracted_face_paths = []
+        best_paths, extracted_face_paths = [], []
 
         for i, f in enumerate(frames_sorted):
             best_path = save_frame(f, folder="best", prefix=f"best_{i}")
@@ -272,7 +248,7 @@ def index_route():
                 face_path = save_frame(face_crop, folder="extracted_faces", prefix=f"face_{i}_{j}")
                 extracted_face_paths.append(face_path)
 
-        # ✅ New frontal-face selection (added feature)
+        # Select most frontal face
         final_face = select_most_frontal_face()
         if final_face:
             print(f"[INFO] Most frontal face: {final_face}")
@@ -287,6 +263,7 @@ def index_route():
 
 @app.route("/video_feed")
 def video_feed():
+    """MJPEG video streaming route"""
     def generate_frames():
         global latest_frame
         while True:
@@ -296,7 +273,8 @@ def video_feed():
                     continue
                 frame = latest_frame.copy()
             _, buffer = cv2.imencode(".jpg", frame)
-            yield (b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + buffer.tobytes() + b"\r\n")
+            yield (b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" +
+                   buffer.tobytes() + b"\r\n")
             time.sleep(0.03)
     return Response(generate_frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
