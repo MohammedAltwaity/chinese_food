@@ -1,0 +1,25 @@
+Results for Search4Faces
+Image: .\images\bachir.jpg
+Timestamp: 2025-10-24T00:11:55.275368
+==================================================
+
+STDOUT:
+--------------------
+Using image: C:\Users\NoName\Desktop\Project5-Glasses\images\bachir.jpg
+Clicked first upload button.
+Drop area is visible.
+Drag-and-drop event dispatched.
+Clicked footer upload button.
+Search button is visible and clickable.
+Clicked search button.
+Result headers found in main document!
+No .card-vk01-header found in main document after waiting: 'charmap' codec can't encode characters in position 3-6: character maps to <undefined>
+Found 1 iframes.
+Iframe 0:
+Switched to iframe 0.
+Trying shadow DOM extraction...
+No result cards found in shadow DOM.
+No result cards found. Trying to print all text on page.
+Error: 'charmap' codec can't encode character '\u2190' in position 65: character maps to <undefined>
+Press Enter to quit and close browser...
+

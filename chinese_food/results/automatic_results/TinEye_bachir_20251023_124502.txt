@@ -1,0 +1,27 @@
+Results for TinEye
+Image: .\images\bachir.jpg
+Timestamp: 2025-10-23T12:45:02.725260
+==================================================
+
+STDOUT:
+--------------------
+Opened TinEye. Waiting 3 seconds for page to load...
+Uploaded .\images\bachir.jpg to TinEye. Waiting 2 seconds before submitting...
+Waiting 10 seconds for results...
+Could not find result count.
+Website: sports.yahoo.com
+URL: https://sports.yahoo.com/soccer/players/838713/
+Website: ca.sports.yahoo.com
+URL: https://ca.sports.yahoo.com/soccer/players/wajdi-kechrida-1801539/
+Website: sports.yahoo.com
+URL: https://sports.yahoo.com/soccer/players/391165/
+Website: sports.yahoo.com
+URL: https://sports.yahoo.com/soccer/players/1441522/
+Website: ca.sports.yahoo.com
+URL: https://ca.sports.yahoo.com/soccer/players/bechir-ben-said-2161301/
+Website: sports.yahoo.com
+URL: https://sports.yahoo.com/soccer/players/2161301/
+Website: uk.sports.yahoo.com
+URL: https://uk.sports.yahoo.com/football/players/ellyes-skhiri/
+Browser is open. Press Enter to close...
+

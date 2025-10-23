@@ -1,0 +1,16 @@
+Results for SauceNAO
+Image: .\images\bachir.jpg
+Timestamp: 2025-10-23T12:45:02.897230
+==================================================
+
+STDOUT:
+--------------------
+Opened SauceNAO. Waiting 3 seconds for page to load...
+Uploaded .\images\bachir.jpg to SauceNAO. Waiting 2 seconds before submitting...
+Submitted search. Waiting 10 seconds for results...
+Author: Vicko Hazdovac
+Author: leafmai
+Author: NewAlighty22Sfm
+Author: Xtreme-jp
+Browser is open. Press Enter to close...
+
