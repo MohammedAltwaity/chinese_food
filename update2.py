@@ -9,8 +9,8 @@ Features:
 - Save all captured frames in 'captured_images'
 - Select top N sharpest frames
 - Robust face extraction with margin and small rotations
-- Save best faces in 'best' and all extracted faces in 'extracted_faces'
-- Send best faces to simulated API
+- Save best frames in 'best' and extracted faces in 'extracted_faces'
+- Send best frames to simulated API
 """
 
 from flask import Flask, Response, render_template_string, request, jsonify
@@ -23,12 +23,12 @@ import os
 # ---------------------------
 # CONFIGURATION
 # ---------------------------
-CAPTURE_BURST_COUNT = 10          # Number of frames per burst
-CAPTURE_DURATION = 1.2            # Duration in seconds for burst
-TOP_N = 5                         # Number of sharpest frames to keep
-DEFAULT_MARGIN = 0.1              # Margin around face (10% of width/height)
-FALLBACK_ANGLES = [-30, 30, -15, 15]  # Rotations for robust detection
-HAAR_CASCADE_PATH = "../haarcascade_frontalface_default.xml"
+CAPTURE_BURST_COUNT = 10
+CAPTURE_DURATION = 1.2
+TOP_N = 5
+DEFAULT_MARGIN = 0.1
+FALLBACK_ANGLES = [-30, 30, -15, 15]
+HAAR_CASCADE_PATH = "/home/pi/mohammed/haarcascade_frontalface_default.xml"
 
 # ---------------------------
 # FOLDER SETUP
@@ -59,7 +59,6 @@ frame_lock = threading.Condition()
 # ---------------------------
 # HELPER FUNCTIONS
 # ---------------------------
-
 def save_frame(frame, folder="captured_images", prefix="frame"):
     """Save a frame to disk with timestamped filename"""
     timestamp = time.strftime("%Y%m%d-%H%M%S-%f")
@@ -74,15 +73,17 @@ def image_quality(image):
     return cv2.Laplacian(gray, cv2.CV_64F).var()
 
 def get_haar_path():
+    """Return Haar cascade path"""
     return HAAR_CASCADE_PATH
 
 def rotate_image(image, angle):
+    """Rotate image around its center"""
     h, w = image.shape[:2]
     M = cv2.getRotationMatrix2D((w//2, h//2), angle, 1.0)
     return cv2.warpAffine(image, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
 
 def extract_face_with_rotation(image, margin=DEFAULT_MARGIN, fallback_angles=FALLBACK_ANGLES):
-    """Detect and crop the largest face in the image (tries rotations)"""
+    """Detect and crop the largest face using rotation fallback"""
     haar_path = get_haar_path()
     if not os.path.exists(haar_path):
         print("❌ Haar cascade not found")
@@ -109,7 +110,7 @@ def extract_face_with_rotation(image, margin=DEFAULT_MARGIN, fallback_angles=FAL
     return image
 
 def extract_all_faces(image, margin=DEFAULT_MARGIN):
-    """Detect and extract ALL faces (no rotation)"""
+    """Detect and extract all faces (no rotation)"""
     haar_path = get_haar_path()
     if not os.path.exists(haar_path):
         print("❌ Haar cascade not found")
@@ -129,8 +130,9 @@ def extract_all_faces(image, margin=DEFAULT_MARGIN):
     return crops
 
 def send_images_to_simulated_api(image_paths):
+    """Simulated API call for testing"""
     print("🔹 Sending images to simulated API...")
-    for i, path in enumerate(image_paths):
+    for path in image_paths:
         print(f"  {path}")
     time.sleep(2)
     return {"status": "success", "processed_images": [os.path.basename(p) for p in image_paths]}
@@ -146,7 +148,7 @@ def update_camera():
         if frame is not None:
             frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
             curr_time = time.time()
-            fps = 1.0 / (curr_time - prev_time) if curr_time-prev_time>0 else 0
+            fps = 1.0 / (curr_time - prev_time) if curr_time - prev_time > 0 else 0
             prev_time = curr_time
             cv2.putText(frame, f"FPS:{fps:.2f}", (10,30),
                         cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,255), 3, cv2.LINE_AA)
@@ -217,7 +219,7 @@ def index_route():
             time.sleep(interval)
 
         # Save all raw frames
-        [save_frame(f, folder="captured_images", prefix=f"frame_{i}") for i,f in enumerate(frames)]
+        [save_frame(f, folder="captured_images", prefix=f"frame_{i}") for i, f in enumerate(frames)]
 
         # Keep top N sharpest
         frames_sorted = sorted(frames, key=image_quality, reverse=True)[:TOP_N]
@@ -226,14 +228,13 @@ def index_route():
         extracted_face_paths = []
 
         for i, f in enumerate(frames_sorted):
-            # Save "best" frame (face-dominant or not)
-            face_img = extract_face_with_rotation(f, margin=DEFAULT_MARGIN)
-            best_path = save_frame(face_img, folder="best", prefix=f"best_{i}")
+            # Save full sharp frame
+            best_path = save_frame(f, folder="best", prefix=f"best_{i}")
             best_paths.append(best_path)
 
-            # Extract all faces from this frame and store them
-            all_faces = extract_all_faces(f, margin=DEFAULT_MARGIN)
-            for j, face_crop in enumerate(all_faces):
+            # Extract all faces
+            faces = extract_all_faces(f, margin=DEFAULT_MARGIN)
+            for j, face_crop in enumerate(faces):
                 face_path = save_frame(face_crop, folder="extracted_faces", prefix=f"face_{i}_{j}")
                 extracted_face_paths.append(face_path)
 
@@ -245,7 +246,6 @@ def index_route():
 
 @app.route("/video_feed")
 def video_feed():
-    """MJPEG streaming route"""
     def generate_frames():
         global latest_frame
         while True:
