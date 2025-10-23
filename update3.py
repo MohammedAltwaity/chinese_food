@@ -144,7 +144,7 @@ def send_images_to_simulated_api(image_paths):
 # NEW FUNCTION: Select most frontal (least rotated) face
 # ---------------------------
 def select_most_frontal_face(folder="extracted_faces"):
-    """Select the most frontal face based on horizontal symmetry"""
+    """Select the most frontal face based on horizontal symmetry and save with timestamp"""
     face_files = [os.path.join(folder, f) for f in os.listdir(folder) if f.endswith(".jpg")]
     if not face_files:
         print("[INFO] No faces to evaluate for frontal selection.")
@@ -167,12 +167,14 @@ def select_most_frontal_face(folder="extracted_faces"):
 
     if best_face_path:
         img = cv2.imread(best_face_path)
-        final_path = os.path.join("final_result", "best_face.jpg")
+        timestamp = time.strftime("%Y%m%d-%H%M%S-%f")
+        final_path = os.path.join("final_result", f"best_face_{timestamp}.jpg")
         cv2.imwrite(final_path, img)
         print(f"[INFO] Best frontal face saved as {final_path}")
         return final_path
 
     return None
+
 
 # ---------------------------
 # CAMERA STREAM THREAD
