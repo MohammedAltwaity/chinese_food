@@ -46,6 +46,8 @@ The system performs **recursive automated searches** until a match (“hit”) i
 ```bash
 pip install opencv-python face-recognition selenium
 ```
+---
+
 ### Usage
 
 Capture images: Use the included script to capture facial samples.
@@ -53,6 +55,8 @@ Capture images: Use the included script to capture facial samples.
 Run search automation: Execute the automation module to begin recursive website searches.
 
 Explore docs: See the docs/ folder for setup, configuration, and model tuning.
+
+---
 
 ### Contributing
 
@@ -67,6 +71,7 @@ Submit a pull request with clear documentation and/or test coverage.
 
 Please follow responsible-disclosure practices for any vulnerabilities or privacy concerns.
 
+---
 
 ### Credits
 
