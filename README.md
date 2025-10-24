@@ -1,72 +1,74 @@
-Automated Facial Search (Educational Research)
+# 🧠 Automated Facial Search (Educational Research)
 
-Automated Facial Search is an educational, research-driven project that explores how to capture a face (using a Raspberry Pi camera or any compatible camera) and run automated facial-matching searches across multiple target websites. The system performs recursive automated searches until a match (“hit”) is found. The project demonstrates automation techniques, computer-vision workflows, and integration strategies in a controlled, academic setting.
+[![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)](https://www.python.org/)
+[![Raspberry Pi](https://img.shields.io/badge/Hardware-Raspberry%20Pi-red?logo=raspberrypi)](https://www.raspberrypi.com/)
+[![OpenCV](https://img.shields.io/badge/Library-OpenCV-green?logo=opencv)](https://opencv.org/)
+[![License](https://img.shields.io/badge/Use-Research%20%7C%20Educational-orange)](#)
+[![Contributors](https://img.shields.io/badge/Contributors-FlawzyByte%20%7C%20Mohammedaltwaity-lightgrey)](#credits)
 
-⚠️ Important — Responsible Use: This project is intended for research, learning, and lawful uses only. Misuse (unauthorized surveillance, stalking, privacy invasion, or circumventing website terms of service) may be illegal and unethical. Before using or deploying this software, obtain all necessary legal permissions and ensure compliance with privacy laws and the policies of target websites.
+---
 
-Key Concepts
+### 🎯 Project Overview
+**Automated Facial Search** is an educational, research-driven project that explores how to **capture a face** (using a **Raspberry Pi camera** or any compatible camera) and run **automated facial-matching searches** across multiple target websites.  
+The system performs **recursive automated searches** until a match (“hit”) is found, demonstrating **automation**, **computer-vision workflows**, and **AI integration** in a controlled, academic setting.
 
-Face capture — Acquire facial images using a Raspberry Pi camera (or other cameras).
+> ⚠️ **Responsible Use:**  
+> This project is intended for **research, learning, and lawful purposes only**.  
+> Misuse (e.g., unauthorized surveillance, stalking, privacy invasion, or violating website terms of service) is **strictly prohibited**.  
+> Always obtain necessary legal permissions and comply with privacy and data-protection laws.
 
-Local facial recognition — Run model-based facial matching locally (no external APIs required).
+---
 
-Automated searching — Programmatically automate interactions with websites to look for matching faces; searches continue recursively until a hit is found.
+## 🔑 Key Concepts
+-  **Face Capture** — Acquire facial images using a Raspberry Pi camera (or any supported camera).  
+-  **Local Facial Recognition** — Perform model-based matching locally without relying on external APIs.  
+-  **Automated Searching** — Automate browser interactions to find matches recursively.  
+-  **Adaptable Hardware** — Extend functionality to RTL or security cameras for approved research.
 
-Adaptable hardware — Can be extended to work with RTL cameras or other security cameras for experiments (with appropriate permissions).
+---
 
-Features
+## ✨ Features
+-  Camera integration for **real-time** or **batch image capture**.  
+- 🔍 **Local face detection and recognition** pipeline — *no external API keys required*.  
+-  Automated **website traversal and matching search** logic.  
+- ⚙️ Fully **modular and research-oriented** design for extensibility.
 
-Camera integration for real-time or batch image capture.
+---
 
-Local face detection and matching pipeline — no external API keys required.
+##  Getting Started (Quick Setup)
 
-Automated browser/scripted website traversal to attempt matches.
 
-Designed for research and learning (modular and adaptable).
+### 🧰 Requirements
+- **Hardware:** Raspberry Pi + Camera Module (or any USB/RTSP camera)  
+- **Software:** Python 3.x, OpenCV, `face-recognition`, Selenium or Playwright  
 
-Getting Started (quick)
-
-Hardware: Raspberry Pi with camera module (or any USB/RTSP camera).
-
-Software: Python 3.x, OpenCV, dlib/face-recognition (or your chosen face model), and automation tooling (e.g., Selenium, Playwright, or headless browser scripts).
-
-Install deps (example):
-
+### 📦 Installation
+```bash
 pip install opencv-python face-recognition selenium
 
+### Usage
 
-Capture images: Use the included capture script to generate a local dataset.
+Capture images: Use the included script to capture facial samples.
 
-Run search automation: Start the automation module to begin recursive site searches (see docs/ or scripts/ for specifics).
+Run search automation: Execute the automation module to begin recursive website searches.
 
-See the docs/ folder for detailed setup and configuration (camera setup, model selection, automation scripts, and runtime flags).
+Explore docs: See the docs/ folder for setup, configuration, and model tuning.
 
-Ethics & Legal Notice
+### Contributing
 
-This project demonstrates powerful capabilities that can impact privacy. By using or adapting this repository you agree to:
+Contributions are welcome!
+If you'd like to improve or extend this project:
 
-Use it only for lawful, ethical research, or sanctioned testing.
+Open an issue describing your proposed changes.
 
-Obtain informed consent from any persons whose images you capture or process.
+Fork the repo and create a feature branch.
 
-Respect website terms of service and robots policies when automating interactions.
+Submit a pull request with clear documentation and/or test coverage.
 
-Avoid deploying this system for unauthorized surveillance or harassment.
+Please follow responsible-disclosure practices for any vulnerabilities or privacy concerns.
 
-Failure to comply may have legal consequences. If in doubt, consult a legal advisor or your institution’s ethics board.
 
-Contributing
+### Credits
 
-This repo is focused on education and research. If you want to contribute:
-
-Open an issue describing your proposed change.
-
-Fork, create a feature branch, and make a pull request.
-
-Include tests or documentation for any new feature.
-
-Please follow responsible-disclosure practices for any vulnerabilities or privacy concerns you encounter.
-
-Credits
-
-Fully developed by: @FlawzyByte & @Mohammedaltwaity
+Fully developed by:
+@FlawzyByte & @Mohammedaltwaity
