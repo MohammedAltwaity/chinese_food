@@ -1,0 +1,34 @@
+Results for TinEye
+Image: images\rpi_image_20251024_123128_bachir.jpg
+Timestamp: 2025-10-24T13:58:21.955834
+==================================================
+
+STDOUT:
+--------------------
+Opened TinEye. Waiting 3 seconds for page to load...
+Error during upload/search: Message: no such window: target window already closed
+from unknown error: web view not found
+(Session info: chrome=141.0.7390.108)
+Stacktrace:
+GetHandleVerifier [0x0x7ff7eb82e8e5+80021]
+GetHandleVerifier [0x0x7ff7eb82e940+80112]
+(No symbol) [0x0x7ff7eb5b060f]
+(No symbol) [0x0x7ff7eb5882f1]
+(No symbol) [0x0x7ff7eb6388be]
+(No symbol) [0x0x7ff7eb658fa2]
+(No symbol) [0x0x7ff7eb631003]
+(No symbol) [0x0x7ff7eb5f95d1]
+(No symbol) [0x0x7ff7eb5fa3f3]
+GetHandleVerifier [0x0x7ff7ebaedc7d+2960429]
+GetHandleVerifier [0x0x7ff7ebae7f3a+2936554]
+GetHandleVerifier [0x0x7ff7ebb08977+3070247]
+GetHandleVerifier [0x0x7ff7eb8483ce+185214]
+GetHandleVerifier [0x0x7ff7eb84fe1f+216527]
+GetHandleVerifier [0x0x7ff7eb837b24+117460]
+GetHandleVerifier [0x0x7ff7eb837cdf+117903]
+GetHandleVerifier [0x0x7ff7eb81dbb8+11112]
+BaseThreadInitThunk [0x0x7ffc6bbc7374+20]
+RtlUserThreadStart [0x0x7ffc6ca1cc91+33]
+
+Browser is open. Press Enter to close...
+

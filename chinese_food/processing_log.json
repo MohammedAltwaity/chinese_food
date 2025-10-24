@@ -1,0 +1,14 @@
+{
+  "processed_files": [
+    "images\\rpi_image_20251024_143039_best_face_20251024-143038-f.jpg",
+    "images\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg"
+  ],
+  "stats": {
+    "total_processed": 2,
+    "successful": 2,
+    "failed": 0,
+    "duplicates_skipped": 0,
+    "start_time": "2025-10-24T14:28:49.208222"
+  },
+  "last_updated": "2025-10-24T14:43:23.358943"
+}

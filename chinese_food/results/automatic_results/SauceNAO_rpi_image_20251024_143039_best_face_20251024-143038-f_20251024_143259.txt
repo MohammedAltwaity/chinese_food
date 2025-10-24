@@ -1,0 +1,18 @@
+Results for SauceNAO
+Image: images\rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+Timestamp: 2025-10-24T14:32:59.399352
+==================================================
+
+STDOUT:
+--------------------
+Opened SauceNAO. Waiting 3 seconds for page to load...
+Uploaded images\rpi_image_20251024_143039_best_face_20251024-143038-f.jpg to SauceNAO. Waiting 2 seconds before submitting...
+Submitted search. Waiting 10 seconds for results...
+Author: KarmeticPeace
+Author: Hai Qin
+Author: Hai Qin
+Author: Hai Qin
+Author: Hai Qin
+Author: SooHK
+Browser is open. Press Enter to close...
+

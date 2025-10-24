@@ -1,0 +1,55 @@
+Results for Search4Faces
+Image: images\rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+Timestamp: 2025-10-24T14:32:59.198911
+==================================================
+
+STDOUT:
+--------------------
+Using image: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images\rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+Clicked first upload button.
+Drop area is visible.
+Drag-and-drop event dispatched.
+Clicked footer upload button.
+Search button is visible and clickable.
+Clicked search button.
+Result headers found in main document!
+1. Odina Aka-Str
+Score: score: 56.54%
+Age:
+Location: Russia [Moscow]
+----------------------------------------
+2. Odina Aka-Str
+Score: score: 56.54%
+Age:
+Location: Russia [Moscow]
+----------------------------------------
+3. HassanButt Markhor
+Score: score: 56.48%
+Age: 29 years [5.8.1996]
+Location:
+----------------------------------------
+4. HassanButt Markhor
+Score: score: 56.48%
+Age: 29 years [5.8.1996]
+Location:
+----------------------------------------
+5. Emre Tekinbas
+Score: score: 54.73%
+Age: 27 years [16.5.1998]
+Location:
+----------------------------------------
+6. Emre Tekinbas
+Score: score: 54.73%
+Age: 27 years [16.5.1998]
+Location:
+----------------------------------------
+No .card-vk01-header found in main document after waiting: 'charmap' codec can't encode characters in position 3-9: character maps to <undefined>
+Found 1 iframes.
+Iframe 0:
+Switched to iframe 0.
+Trying shadow DOM extraction...
+No result cards found in shadow DOM.
+No result cards found. Trying to print all text on page.
+Error: 'charmap' codec can't encode character '\u2190' in position 65: character maps to <undefined>
+Press Enter to quit and close browser...
+

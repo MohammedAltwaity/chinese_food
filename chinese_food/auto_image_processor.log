@@ -1,0 +1,314 @@
+2025-10-24 12:55:25,363 - INFO - ============================================================
+2025-10-24 12:55:25,365 - INFO - AUTO IMAGE PROCESSOR - FOLDER WATCHER
+2025-10-24 12:55:25,368 - INFO - ============================================================
+2025-10-24 12:55:25,372 - INFO - Monitoring images/ folder for new image files
+2025-10-24 12:55:25,373 - INFO - Automatically triggers master_automation_fixed.py
+2025-10-24 12:55:25,375 - INFO - Press Ctrl+C to stop
+2025-10-24 12:55:25,375 - INFO - ============================================================
+2025-10-24 12:55:25,377 - INFO - No previous processing log found - starting fresh
+2025-10-24 12:55:25,379 - INFO - Auto Image Processor initialized
+2025-10-24 12:55:25,380 - INFO - Monitoring directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 12:55:25,382 - INFO - Supported formats: .jpeg, .gif, .png, .webp, .jpg, .bmp
+2025-10-24 12:55:25,383 - INFO - ============================================================
+2025-10-24 12:55:25,384 - INFO - PROCESSING STATISTICS
+2025-10-24 12:55:25,384 - INFO - ============================================================
+2025-10-24 12:55:25,386 - INFO - Total processed: 0
+2025-10-24 12:55:25,387 - INFO - Successful: 0
+2025-10-24 12:55:25,388 - INFO - Failed: 0
+2025-10-24 12:55:25,389 - INFO - Duplicates skipped: 0
+2025-10-24 12:55:25,390 - INFO - Currently processing: 0
+2025-10-24 12:55:25,390 - INFO - Start time: 2025-10-24T12:55:25.376940
+2025-10-24 12:55:25,392 - INFO - ============================================================
+2025-10-24 12:55:25,398 - INFO - [WATCH] Started monitoring: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 12:58:02,626 - INFO - [NEW] New image detected: rpi_image_20251024_125802_best_face_20251024-125802-f.jpg
+2025-10-24 12:58:02,669 - INFO - Waiting for file to be ready: rpi_image_20251024_125802_best_face_20251024-125802-f.jpg
+2025-10-24 12:58:02,760 - INFO - File ready: rpi_image_20251024_125802_best_face_20251024-125802-f.jpg
+2025-10-24 12:58:02,762 - INFO - [PROCESS] Starting processing: rpi_image_20251024_125802_best_face_20251024-125802-f.jpg
+2025-10-24 12:58:02,763 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_125802_best_face_20251024-125802-f.jpg
+2025-10-24 12:58:02,764 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_125802_best_face_20251024-125802-f.jpg
+2025-10-24 12:59:30,573 - INFO - [NEW] New image detected: rpi_image_20251024_125930_best_face_20251024-125928-f.jpg
+2025-10-24 12:59:30,585 - INFO - Waiting for file to be ready: rpi_image_20251024_125930_best_face_20251024-125928-f.jpg
+2025-10-24 12:59:30,624 - INFO - File ready: rpi_image_20251024_125930_best_face_20251024-125928-f.jpg
+2025-10-24 12:59:30,657 - INFO - [PROCESS] Starting processing: rpi_image_20251024_125930_best_face_20251024-125928-f.jpg
+2025-10-24 12:59:30,657 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_125930_best_face_20251024-125928-f.jpg
+2025-10-24 12:59:30,672 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_125930_best_face_20251024-125928-f.jpg
+2025-10-24 13:05:37,101 - INFO - [NEW] New image detected: rpi_image_20251024_130537_best_face_20251024-130534-f.jpg
+2025-10-24 13:05:37,105 - INFO - Waiting for file to be ready: rpi_image_20251024_130537_best_face_20251024-130534-f.jpg
+2025-10-24 13:05:37,145 - INFO - File ready: rpi_image_20251024_130537_best_face_20251024-130534-f.jpg
+2025-10-24 13:05:37,151 - INFO - [PROCESS] Starting processing: rpi_image_20251024_130537_best_face_20251024-130534-f.jpg
+2025-10-24 13:05:37,152 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_130537_best_face_20251024-130534-f.jpg
+2025-10-24 13:05:37,154 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_130537_best_face_20251024-130534-f.jpg
+2025-10-24 13:11:10,312 - INFO - [NEW] New image detected: rpi_image_20251024_131110_best_face_20251024-131109-f.jpg
+2025-10-24 13:11:10,321 - INFO - Waiting for file to be ready: rpi_image_20251024_131110_best_face_20251024-131109-f.jpg
+2025-10-24 13:11:10,405 - INFO - File ready: rpi_image_20251024_131110_best_face_20251024-131109-f.jpg
+2025-10-24 13:11:10,433 - INFO - [PROCESS] Starting processing: rpi_image_20251024_131110_best_face_20251024-131109-f.jpg
+2025-10-24 13:11:10,434 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_131110_best_face_20251024-131109-f.jpg
+2025-10-24 13:11:10,437 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_131110_best_face_20251024-131109-f.jpg
+2025-10-24 13:12:14,970 - INFO - [STOP] Stopping folder watcher...
+2025-10-24 13:12:15,132 - INFO - ============================================================
+2025-10-24 13:12:15,150 - INFO - PROCESSING STATISTICS
+2025-10-24 13:12:15,151 - INFO - ============================================================
+2025-10-24 13:12:15,164 - INFO - Total processed: 0
+2025-10-24 13:12:15,167 - INFO - Successful: 0
+2025-10-24 13:12:15,168 - INFO - Failed: 0
+2025-10-24 13:12:15,168 - INFO - Duplicates skipped: 0
+2025-10-24 13:12:15,217 - INFO - Currently processing: 4
+2025-10-24 13:12:15,263 - INFO - Start time: 2025-10-24T12:55:25.376940
+2025-10-24 13:12:15,337 - INFO - ============================================================
+2025-10-24 13:12:15,444 - INFO - [END] Auto Image Processor stopped
+2025-10-24 13:52:28,507 - INFO - ============================================================
+2025-10-24 13:52:28,508 - INFO - AUTO IMAGE PROCESSOR - FOLDER WATCHER
+2025-10-24 13:52:28,508 - INFO - ============================================================
+2025-10-24 13:52:28,509 - INFO - Monitoring images/ folder for new image files
+2025-10-24 13:52:28,509 - INFO - Automatically triggers master_automation_fixed.py
+2025-10-24 13:52:28,509 - INFO - Press Ctrl+C to stop
+2025-10-24 13:52:28,510 - INFO - ============================================================
+2025-10-24 13:52:28,511 - INFO - No previous processing log found - starting fresh
+2025-10-24 13:52:28,512 - INFO - Auto Image Processor initialized
+2025-10-24 13:52:28,512 - INFO - Monitoring directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 13:52:28,512 - INFO - Supported formats: .bmp, .jpeg, .png, .gif, .jpg, .webp
+2025-10-24 13:52:28,513 - INFO - ============================================================
+2025-10-24 13:52:28,514 - INFO - PROCESSING STATISTICS
+2025-10-24 13:52:28,514 - INFO - ============================================================
+2025-10-24 13:52:28,515 - INFO - Total processed: 0
+2025-10-24 13:52:28,515 - INFO - Successful: 0
+2025-10-24 13:52:28,516 - INFO - Failed: 0
+2025-10-24 13:52:28,516 - INFO - Duplicates skipped: 0
+2025-10-24 13:52:28,516 - INFO - Currently processing: 0
+2025-10-24 13:52:28,517 - INFO - Start time: 2025-10-24T13:52:28.510926
+2025-10-24 13:52:28,517 - INFO - ============================================================
+2025-10-24 13:52:28,519 - INFO - [WATCH] Started monitoring: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 13:52:54,182 - INFO - [NEW] New image detected: rpi_image_20251024_135254_best_face_20251024-135253-f.jpg
+2025-10-24 13:52:54,186 - INFO - Waiting for file to be ready: rpi_image_20251024_135254_best_face_20251024-135253-f.jpg
+2025-10-24 13:52:54,217 - INFO - File ready: rpi_image_20251024_135254_best_face_20251024-135253-f.jpg
+2025-10-24 13:52:54,219 - INFO - [PROCESS] Starting processing: rpi_image_20251024_135254_best_face_20251024-135253-f.jpg
+2025-10-24 13:52:54,219 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_135254_best_face_20251024-135253-f.jpg
+2025-10-24 13:52:54,220 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_135254_best_face_20251024-135253-f.jpg
+2025-10-24 13:55:30,751 - INFO - [STOP] Stopping folder watcher...
+2025-10-24 13:55:30,760 - INFO - ============================================================
+2025-10-24 13:55:30,761 - INFO - PROCESSING STATISTICS
+2025-10-24 13:55:30,763 - INFO - ============================================================
+2025-10-24 13:55:30,765 - INFO - Total processed: 0
+2025-10-24 13:55:30,767 - INFO - Successful: 0
+2025-10-24 13:55:30,770 - INFO - Failed: 0
+2025-10-24 13:55:30,771 - INFO - Duplicates skipped: 0
+2025-10-24 13:55:30,773 - INFO - Currently processing: 1
+2025-10-24 13:55:30,775 - INFO - Start time: 2025-10-24T13:52:28.510926
+2025-10-24 13:55:30,777 - INFO - ============================================================
+2025-10-24 13:55:30,782 - INFO - [END] Auto Image Processor stopped
+2025-10-24 13:55:51,097 - INFO - ============================================================
+2025-10-24 13:55:51,097 - INFO - AUTO IMAGE PROCESSOR - FOLDER WATCHER
+2025-10-24 13:55:51,099 - INFO - ============================================================
+2025-10-24 13:55:51,100 - INFO - Monitoring images/ folder for new image files
+2025-10-24 13:55:51,103 - INFO - Automatically triggers master_automation_fixed.py
+2025-10-24 13:55:51,104 - INFO - Press Ctrl+C to stop
+2025-10-24 13:55:51,105 - INFO - ============================================================
+2025-10-24 13:55:51,107 - INFO - No previous processing log found - starting fresh
+2025-10-24 13:55:51,108 - INFO - Auto Image Processor initialized
+2025-10-24 13:55:51,109 - INFO - Monitoring directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 13:55:51,110 - INFO - Supported formats: .jpeg, .png, .webp, .bmp, .gif, .jpg
+2025-10-24 13:55:51,111 - INFO - ============================================================
+2025-10-24 13:55:51,112 - INFO - PROCESSING STATISTICS
+2025-10-24 13:55:51,113 - INFO - ============================================================
+2025-10-24 13:55:51,115 - INFO - Total processed: 0
+2025-10-24 13:55:51,115 - INFO - Successful: 0
+2025-10-24 13:55:51,116 - INFO - Failed: 0
+2025-10-24 13:55:51,117 - INFO - Duplicates skipped: 0
+2025-10-24 13:55:51,119 - INFO - Currently processing: 0
+2025-10-24 13:55:51,123 - INFO - Start time: 2025-10-24T13:55:51.107019
+2025-10-24 13:55:51,123 - INFO - ============================================================
+2025-10-24 13:55:51,127 - INFO - [WATCH] Started monitoring: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 13:56:18,672 - INFO - [NEW] New image detected: rpi_image_20251024_135618_best_face_20251024-135618-f.jpg
+2025-10-24 13:56:59,060 - INFO - Waiting for file to be ready: rpi_image_20251024_135618_best_face_20251024-135618-f.jpg
+2025-10-24 13:56:59,084 - INFO - File ready: rpi_image_20251024_135618_best_face_20251024-135618-f.jpg
+2025-10-24 13:56:59,086 - INFO - [PROCESS] Starting processing: rpi_image_20251024_135618_best_face_20251024-135618-f.jpg
+2025-10-24 13:56:59,086 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_135618_best_face_20251024-135618-f.jpg
+2025-10-24 13:56:59,088 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_135618_best_face_20251024-135618-f.jpg
+2025-10-24 13:56:59,127 - INFO - [READY] File ready after modification: rpi_image_20251024_123128_bachir.jpg
+2025-10-24 13:56:59,130 - INFO - [PROCESS] Starting processing: rpi_image_20251024_123128_bachir.jpg
+2025-10-24 13:56:59,130 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_123128_bachir.jpg
+2025-10-24 13:56:59,131 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_123128_bachir.jpg
+2025-10-24 14:15:16,416 - INFO - [STOP] Stopping folder watcher...
+2025-10-24 14:15:16,503 - INFO - ============================================================
+2025-10-24 14:15:16,503 - INFO - PROCESSING STATISTICS
+2025-10-24 14:15:16,516 - INFO - ============================================================
+2025-10-24 14:15:16,518 - INFO - Total processed: 0
+2025-10-24 14:15:16,535 - INFO - Successful: 0
+2025-10-24 14:15:16,536 - INFO - Failed: 0
+2025-10-24 14:15:16,537 - INFO - Duplicates skipped: 0
+2025-10-24 14:15:16,549 - INFO - Currently processing: 2
+2025-10-24 14:15:16,551 - INFO - Start time: 2025-10-24T13:55:51.107019
+2025-10-24 14:15:16,552 - INFO - ============================================================
+2025-10-24 14:15:16,554 - INFO - [END] Auto Image Processor stopped
+2025-10-24 14:19:30,464 - INFO - ============================================================
+2025-10-24 14:19:30,464 - INFO - AUTO IMAGE PROCESSOR - FOLDER WATCHER
+2025-10-24 14:19:30,464 - INFO - ============================================================
+2025-10-24 14:19:30,465 - INFO - Monitoring images/ folder for new image files
+2025-10-24 14:19:30,465 - INFO - Automatically triggers master_automation_fixed.py
+2025-10-24 14:19:30,465 - INFO - Press Ctrl+C to stop
+2025-10-24 14:19:30,465 - INFO - ============================================================
+2025-10-24 14:19:30,466 - INFO - No previous processing log found - starting fresh
+2025-10-24 14:19:30,466 - INFO - Auto Image Processor initialized
+2025-10-24 14:19:30,466 - INFO - Monitoring directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:19:30,467 - INFO - Supported formats: .gif, .bmp, .png, .webp, .jpeg, .jpg
+2025-10-24 14:19:30,467 - INFO - ============================================================
+2025-10-24 14:19:30,467 - INFO - PROCESSING STATISTICS
+2025-10-24 14:19:30,467 - INFO - ============================================================
+2025-10-24 14:19:30,467 - INFO - Total processed: 0
+2025-10-24 14:19:30,468 - INFO - Successful: 0
+2025-10-24 14:19:30,468 - INFO - Failed: 0
+2025-10-24 14:19:30,468 - INFO - Duplicates skipped: 0
+2025-10-24 14:19:30,468 - INFO - Currently processing: 0
+2025-10-24 14:19:30,469 - INFO - Start time: 2025-10-24T14:19:30.466029
+2025-10-24 14:19:30,469 - INFO - ============================================================
+2025-10-24 14:19:30,470 - INFO - [WATCH] Started monitoring: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:20:00,473 - INFO - ============================================================
+2025-10-24 14:24:37,359 - INFO - PROCESSING STATISTICS
+2025-10-24 14:24:37,360 - INFO - ============================================================
+2025-10-24 14:24:37,360 - INFO - Total processed: 0
+2025-10-24 14:24:37,360 - INFO - Successful: 0
+2025-10-24 14:24:37,361 - INFO - Failed: 0
+2025-10-24 14:24:37,361 - INFO - Duplicates skipped: 0
+2025-10-24 14:24:37,361 - INFO - Currently processing: 0
+2025-10-24 14:24:37,361 - INFO - Start time: 2025-10-24T14:19:30.466029
+2025-10-24 14:24:37,361 - INFO - ============================================================
+2025-10-24 14:24:44,595 - INFO - [STOP] Stopping folder watcher...
+2025-10-24 14:24:44,600 - INFO - ============================================================
+2025-10-24 14:24:44,602 - INFO - PROCESSING STATISTICS
+2025-10-24 14:24:44,606 - INFO - ============================================================
+2025-10-24 14:24:44,611 - INFO - Total processed: 0
+2025-10-24 14:24:44,615 - INFO - Successful: 0
+2025-10-24 14:24:44,620 - INFO - Failed: 0
+2025-10-24 14:24:44,624 - INFO - Duplicates skipped: 0
+2025-10-24 14:24:44,626 - INFO - Currently processing: 0
+2025-10-24 14:24:44,628 - INFO - Start time: 2025-10-24T14:19:30.466029
+2025-10-24 14:24:44,631 - INFO - ============================================================
+2025-10-24 14:24:44,633 - INFO - [END] Auto Image Processor stopped
+2025-10-24 14:24:47,791 - INFO - ============================================================
+2025-10-24 14:24:47,791 - INFO - AUTO IMAGE PROCESSOR - FOLDER WATCHER
+2025-10-24 14:24:47,792 - INFO - ============================================================
+2025-10-24 14:24:47,792 - INFO - Monitoring images/ folder for new image files
+2025-10-24 14:24:47,792 - INFO - Automatically triggers master_automation_fixed.py
+2025-10-24 14:24:47,792 - INFO - Press Ctrl+C to stop
+2025-10-24 14:24:47,793 - INFO - ============================================================
+2025-10-24 14:24:47,793 - INFO - No previous processing log found - starting fresh
+2025-10-24 14:24:47,793 - INFO - Auto Image Processor initialized
+2025-10-24 14:24:47,794 - INFO - Monitoring directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:24:47,794 - INFO - Supported formats: .png, .jpeg, .webp, .jpg, .bmp, .gif
+2025-10-24 14:24:47,794 - INFO - ============================================================
+2025-10-24 14:24:47,794 - INFO - PROCESSING STATISTICS
+2025-10-24 14:24:47,795 - INFO - ============================================================
+2025-10-24 14:24:47,795 - INFO - Total processed: 0
+2025-10-24 14:24:47,795 - INFO - Successful: 0
+2025-10-24 14:24:47,795 - INFO - Failed: 0
+2025-10-24 14:24:47,795 - INFO - Duplicates skipped: 0
+2025-10-24 14:24:47,796 - INFO - Currently processing: 0
+2025-10-24 14:24:47,796 - INFO - Start time: 2025-10-24T14:24:47.793370
+2025-10-24 14:24:47,796 - INFO - ============================================================
+2025-10-24 14:24:47,797 - INFO - [WATCH] Started monitoring: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:27:56,129 - INFO - [STOP] Stopping folder watcher...
+2025-10-24 14:27:56,133 - INFO - ============================================================
+2025-10-24 14:27:56,133 - INFO - PROCESSING STATISTICS
+2025-10-24 14:27:56,133 - INFO - ============================================================
+2025-10-24 14:27:56,133 - INFO - Total processed: 0
+2025-10-24 14:27:56,134 - INFO - Successful: 0
+2025-10-24 14:27:56,134 - INFO - Failed: 0
+2025-10-24 14:27:56,134 - INFO - Duplicates skipped: 0
+2025-10-24 14:27:56,134 - INFO - Currently processing: 0
+2025-10-24 14:27:56,134 - INFO - Start time: 2025-10-24T14:24:47.793370
+2025-10-24 14:27:56,135 - INFO - ============================================================
+2025-10-24 14:27:56,135 - INFO - [END] Auto Image Processor stopped
+2025-10-24 14:28:49,206 - INFO - ============================================================
+2025-10-24 14:28:49,207 - INFO - AUTO IMAGE PROCESSOR - FOLDER WATCHER
+2025-10-24 14:28:49,207 - INFO - ============================================================
+2025-10-24 14:28:49,207 - INFO - Monitoring images/ folder for new image files
+2025-10-24 14:28:49,207 - INFO - Automatically triggers master_automation_fixed.py
+2025-10-24 14:28:49,207 - INFO - Press Ctrl+C to stop
+2025-10-24 14:28:49,208 - INFO - ============================================================
+2025-10-24 14:28:49,208 - INFO - No previous processing log found - starting fresh
+2025-10-24 14:28:49,208 - INFO - Auto Image Processor initialized
+2025-10-24 14:28:49,209 - INFO - Monitoring directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:28:49,209 - INFO - Supported formats: .webp, .gif, .jpeg, .jpg, .bmp, .png
+2025-10-24 14:28:49,209 - INFO - ============================================================
+2025-10-24 14:28:49,209 - INFO - PROCESSING STATISTICS
+2025-10-24 14:28:49,209 - INFO - ============================================================
+2025-10-24 14:28:49,209 - INFO - Total processed: 0
+2025-10-24 14:28:49,209 - INFO - Successful: 0
+2025-10-24 14:28:49,210 - INFO - Failed: 0
+2025-10-24 14:28:49,210 - INFO - Duplicates skipped: 0
+2025-10-24 14:28:49,210 - INFO - Currently processing: 0
+2025-10-24 14:28:49,210 - INFO - Start time: 2025-10-24T14:28:49.208222
+2025-10-24 14:28:49,210 - INFO - ============================================================
+2025-10-24 14:28:49,211 - INFO - [WATCH] Started monitoring: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:30:39,117 - INFO - [NEW] New image detected: rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+2025-10-24 14:30:39,117 - INFO - Waiting for file to be ready: rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+2025-10-24 14:30:39,127 - INFO - File ready: rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+2025-10-24 14:30:39,128 - INFO - [PROCESS] Starting processing: rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+2025-10-24 14:30:39,128 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+2025-10-24 14:30:39,129 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+2025-10-24 14:33:00,258 - INFO - [SUCCESS] rpi_image_20251024_143039_best_face_20251024-143038-f.jpg processed successfully in 141.13s
+2025-10-24 14:33:00,259 - INFO - [STDOUT] rpi_image_20251024_143039_best_face_20251024-143038-f.jpg: 2025-10-24 14:30:39,346 - INFO - [SINGLE] Processing specific image with fixed strategy...
+2025-10-24 14:30:39,346 - INFO - [PROCESS] Processing image: images\rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+2025-10-24 14:30:39,346 - INFO - Image validated: images\rpi_image_20251024_143039_best_face_20251024-143038-f.jpg (0.01MB)
+2025-10-24 14:30:39,347 - INFO - [SESSION] Session 20251024_143039 started for rpi_image_20251024_143039_best_face_20251024-143038-f
+2025-10-24 14:30:39,347 - ...
+2025-10-24 14:36:51,022 - INFO - [STOP] Stopping folder watcher...
+2025-10-24 14:36:51,025 - INFO - ============================================================
+2025-10-24 14:36:51,026 - INFO - PROCESSING STATISTICS
+2025-10-24 14:36:51,029 - INFO - ============================================================
+2025-10-24 14:36:51,029 - INFO - Total processed: 1
+2025-10-24 14:36:51,030 - INFO - Successful: 1
+2025-10-24 14:36:51,031 - INFO - Failed: 0
+2025-10-24 14:36:51,032 - INFO - Duplicates skipped: 0
+2025-10-24 14:36:51,032 - INFO - Currently processing: 0
+2025-10-24 14:36:51,033 - INFO - Start time: 2025-10-24T14:28:49.208222
+2025-10-24 14:36:51,034 - INFO - ============================================================
+2025-10-24 14:36:51,034 - INFO - [END] Auto Image Processor stopped
+2025-10-24 14:37:27,606 - INFO - ============================================================
+2025-10-24 14:37:27,607 - INFO - AUTO IMAGE PROCESSOR - FOLDER WATCHER
+2025-10-24 14:37:27,607 - INFO - ============================================================
+2025-10-24 14:37:27,607 - INFO - Monitoring images/ folder for new image files
+2025-10-24 14:37:27,608 - INFO - Automatically triggers master_automation_fixed.py
+2025-10-24 14:37:27,608 - INFO - Press Ctrl+C to stop
+2025-10-24 14:37:27,608 - INFO - ============================================================
+2025-10-24 14:37:27,621 - INFO - Loaded 1 previously processed files
+2025-10-24 14:37:27,622 - INFO - Auto Image Processor initialized
+2025-10-24 14:37:27,622 - INFO - Monitoring directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:37:27,622 - INFO - Supported formats: .bmp, .jpeg, .jpg, .png, .webp, .gif
+2025-10-24 14:37:27,622 - INFO - ============================================================
+2025-10-24 14:37:27,622 - INFO - PROCESSING STATISTICS
+2025-10-24 14:37:27,623 - INFO - ============================================================
+2025-10-24 14:37:27,623 - INFO - Total processed: 1
+2025-10-24 14:37:27,623 - INFO - Successful: 1
+2025-10-24 14:37:27,623 - INFO - Failed: 0
+2025-10-24 14:37:27,624 - INFO - Duplicates skipped: 0
+2025-10-24 14:37:27,624 - INFO - Currently processing: 0
+2025-10-24 14:37:27,624 - INFO - Start time: 2025-10-24T14:28:49.208222
+2025-10-24 14:37:27,624 - INFO - ============================================================
+2025-10-24 14:37:27,626 - INFO - [WATCH] Started monitoring: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:37:54,402 - INFO - [NEW] New image detected: rpi_image_20251024_143754_best_face_20251024-143754-f.jpg
+2025-10-24 14:37:54,402 - INFO - Waiting for file to be ready: rpi_image_20251024_143754_best_face_20251024-143754-f.jpg
+2025-10-24 14:37:54,413 - INFO - File ready: rpi_image_20251024_143754_best_face_20251024-143754-f.jpg
+2025-10-24 14:37:54,414 - INFO - [PROCESS] Starting processing: rpi_image_20251024_143754_best_face_20251024-143754-f.jpg
+2025-10-24 14:37:54,414 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_143754_best_face_20251024-143754-f.jpg
+2025-10-24 14:37:54,414 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_143754_best_face_20251024-143754-f.jpg
+2025-10-24 14:37:55,192 - INFO - [NEW] New image detected: rpi_image_20251024_143755_best_face_20251024-143755-f.jpg
+2025-10-24 14:37:55,207 - INFO - Waiting for file to be ready: rpi_image_20251024_143755_best_face_20251024-143755-f.jpg
+2025-10-24 14:37:55,233 - INFO - File ready: rpi_image_20251024_143755_best_face_20251024-143755-f.jpg
+2025-10-24 14:37:55,248 - INFO - [PROCESS] Starting processing: rpi_image_20251024_143755_best_face_20251024-143755-f.jpg
+2025-10-24 14:37:55,248 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_143755_best_face_20251024-143755-f.jpg
+2025-10-24 14:37:55,251 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_143755_best_face_20251024-143755-f.jpg
+2025-10-24 14:37:57,234 - INFO - [NEW] New image detected: rpi_image_20251024_143757_best_face_20251024-143757-f.jpg
+2025-10-24 14:37:57,236 - INFO - Waiting for file to be ready: rpi_image_20251024_143757_best_face_20251024-143757-f.jpg
+2025-10-24 14:37:57,256 - INFO - File ready: rpi_image_20251024_143757_best_face_20251024-143757-f.jpg
+2025-10-24 14:37:57,298 - INFO - [PROCESS] Starting processing: rpi_image_20251024_143757_best_face_20251024-143757-f.jpg
+2025-10-24 14:37:57,298 - INFO - [THREAD] Started processing thread for: rpi_image_20251024_143757_best_face_20251024-143757-f.jpg
+2025-10-24 14:37:57,321 - INFO - [CMD] Executing: C:\Users\NoName\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe master_automation_fixed.py --image images\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg
+2025-10-24 14:43:23,357 - INFO - [SUCCESS] rpi_image_20251024_143757_best_face_20251024-143757-f.jpg processed successfully in 326.00s
+2025-10-24 14:43:23,358 - INFO - [STDOUT] rpi_image_20251024_143757_best_face_20251024-143757-f.jpg: 2025-10-24 14:37:58,832 - INFO - [SINGLE] Processing specific image with fixed strategy...
+2025-10-24 14:37:58,832 - INFO - [PROCESS] Processing image: images\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg
+2025-10-24 14:37:58,832 - INFO - Image validated: images\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg (0.01MB)
+2025-10-24 14:37:58,833 - INFO - [SESSION] Session 20251024_143758 started for rpi_image_20251024_143757_best_face_20251024-143757-f
+2025-10-24 14:37:58,833 - ...
+2025-10-24 14:43:36,047 - ERROR - [ERROR] rpi_image_20251024_143755_best_face_20251024-143755-f.jpg processing failed (code: 3221225786)
+2025-10-24 14:43:36,103 - ERROR - [ERROR] rpi_image_20251024_143754_best_face_20251024-143754-f.jpg processing failed (code: 3221225786)

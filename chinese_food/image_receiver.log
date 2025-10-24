@@ -1,0 +1,110 @@
+2025-10-24 12:25:24,985 - INFO - Save directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 12:25:24,989 - INFO - ============================================================
+2025-10-24 12:25:24,990 - INFO - IMAGE RECEIVER SERVER
+2025-10-24 12:25:24,990 - INFO - ============================================================
+2025-10-24 12:25:24,992 - INFO - Host: 0.0.0.0
+2025-10-24 12:25:24,995 - INFO - Port: 5000
+2025-10-24 12:25:24,996 - INFO - Save directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 12:25:24,997 - INFO - Allowed extensions: .jpg, .jpeg, .png, .gif, .bmp
+2025-10-24 12:25:24,998 - INFO - Max file size: 10MB
+2025-10-24 12:25:25,000 - INFO - API key required: False
+2025-10-24 12:25:25,001 - INFO - ============================================================
+2025-10-24 12:25:26,431 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.242.182:5000
+2025-10-24 12:25:26,544 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-24 12:30:23,280 - INFO - 172.27.242.182 - - [24/Oct/2025 12:30:23] "GET /api/health HTTP/1.1" 200 -
+2025-10-24 12:31:28,515 - INFO - 172.27.242.182 - - [24/Oct/2025 12:31:28] "GET /api/health HTTP/1.1" 200 -
+2025-10-24 12:31:28,531 - INFO - Image upload request from IP: 172.27.242.182
+2025-10-24 12:31:28,553 - INFO - Image saved successfully: rpi_image_20251024_123128_bachir.jpg
+2025-10-24 12:31:28,555 - INFO - Upload successful: rpi_image_20251024_123128_bachir.jpg (101233 bytes)
+2025-10-24 12:31:28,557 - INFO - 172.27.242.182 - - [24/Oct/2025 12:31:28] "POST /api/upload-image HTTP/1.1" 200 -
+2025-10-24 12:58:02,586 - INFO - Image upload request from IP: 172.27.242.71
+2025-10-24 12:58:02,623 - INFO - Image saved successfully: rpi_image_20251024_125802_best_face_20251024-125802-f.jpg
+2025-10-24 12:58:02,630 - INFO - Upload successful: rpi_image_20251024_125802_best_face_20251024-125802-f.jpg (14118 bytes)
+2025-10-24 12:58:02,659 - INFO - 172.27.242.71 - - [24/Oct/2025 12:58:02] "POST /api/upload-image HTTP/1.1" 200 -
+2025-10-24 12:59:29,723 - INFO - Image upload request from IP: 172.27.242.71
+2025-10-24 12:59:30,573 - INFO - Image saved successfully: rpi_image_20251024_125930_best_face_20251024-125928-f.jpg
+2025-10-24 12:59:30,588 - INFO - Upload successful: rpi_image_20251024_125930_best_face_20251024-125928-f.jpg (14118 bytes)
+2025-10-24 12:59:30,589 - INFO - 172.27.242.71 - - [24/Oct/2025 12:59:30] "POST /api/upload-image HTTP/1.1" 200 -
+2025-10-24 13:05:36,097 - INFO - Image upload request from IP: 172.27.242.71
+2025-10-24 13:05:37,099 - INFO - Image saved successfully: rpi_image_20251024_130537_best_face_20251024-130534-f.jpg
+2025-10-24 13:05:37,104 - INFO - Upload successful: rpi_image_20251024_130537_best_face_20251024-130534-f.jpg (14118 bytes)
+2025-10-24 13:05:37,109 - INFO - 172.27.242.71 - - [24/Oct/2025 13:05:37] "POST /api/upload-image HTTP/1.1" 200 -
+2025-10-24 13:11:09,788 - INFO - Image upload request from IP: 172.27.242.71
+2025-10-24 13:11:10,310 - INFO - Image saved successfully: rpi_image_20251024_131110_best_face_20251024-131109-f.jpg
+2025-10-24 13:11:10,316 - INFO - Upload successful: rpi_image_20251024_131110_best_face_20251024-131109-f.jpg (14118 bytes)
+2025-10-24 13:11:10,319 - INFO - 172.27.242.71 - - [24/Oct/2025 13:11:10] "POST /api/upload-image HTTP/1.1" 200 -
+2025-10-24 13:52:54,158 - INFO - Image upload request from IP: 172.27.242.71
+2025-10-24 13:52:54,181 - INFO - Image saved successfully: rpi_image_20251024_135254_best_face_20251024-135253-f.jpg
+2025-10-24 13:52:54,184 - INFO - Upload successful: rpi_image_20251024_135254_best_face_20251024-135253-f.jpg (10405 bytes)
+2025-10-24 13:52:54,188 - INFO - 172.27.242.71 - - [24/Oct/2025 13:52:54] "POST /api/upload-image HTTP/1.1" 200 -
+2025-10-24 13:56:18,571 - INFO - Image upload request from IP: 172.27.242.71
+2025-10-24 13:56:18,677 - INFO - Image saved successfully: rpi_image_20251024_135618_best_face_20251024-135618-f.jpg
+2025-10-24 13:56:18,679 - INFO - Upload successful: rpi_image_20251024_135618_best_face_20251024-135618-f.jpg (13722 bytes)
+2025-10-24 13:56:18,681 - INFO - 172.27.242.71 - - [24/Oct/2025 13:56:18] "POST /api/upload-image HTTP/1.1" 200 -
+2025-10-24 14:19:16,373 - INFO - Save directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:19:16,375 - INFO - ============================================================
+2025-10-24 14:19:16,375 - INFO - IMAGE RECEIVER SERVER
+2025-10-24 14:19:16,375 - INFO - ============================================================
+2025-10-24 14:19:16,376 - INFO - Host: 0.0.0.0
+2025-10-24 14:19:16,376 - INFO - Port: 5000
+2025-10-24 14:19:16,376 - INFO - Save directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:19:16,376 - INFO - Allowed extensions: .jpg, .jpeg, .png, .gif, .bmp
+2025-10-24 14:19:16,377 - INFO - Max file size: 10MB
+2025-10-24 14:19:16,377 - INFO - API key required: False
+2025-10-24 14:19:16,377 - INFO - ============================================================
+2025-10-24 14:19:17,432 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.242.182:5000
+2025-10-24 14:19:17,433 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-24 14:28:51,795 - INFO - Save directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:28:51,797 - INFO - ============================================================
+2025-10-24 14:28:51,797 - INFO - IMAGE RECEIVER SERVER
+2025-10-24 14:28:51,797 - INFO - ============================================================
+2025-10-24 14:28:51,797 - INFO - Host: 0.0.0.0
+2025-10-24 14:28:51,797 - INFO - Port: 5000
+2025-10-24 14:28:51,797 - INFO - Save directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:28:51,798 - INFO - Allowed extensions: .jpg, .jpeg, .png, .gif, .bmp
+2025-10-24 14:28:51,798 - INFO - Max file size: 10MB
+2025-10-24 14:28:51,798 - INFO - API key required: False
+2025-10-24 14:28:51,798 - INFO - ============================================================
+2025-10-24 14:28:52,704 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.242.182:5000
+2025-10-24 14:28:52,705 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-24 14:30:39,109 - INFO - Image upload request from IP: 172.27.242.71
+2025-10-24 14:30:39,116 - INFO - Image saved successfully: rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+2025-10-24 14:30:39,117 - INFO - Upload successful: rpi_image_20251024_143039_best_face_20251024-143038-f.jpg (9391 bytes)
+2025-10-24 14:30:39,117 - INFO - 172.27.242.71 - - [24/Oct/2025 14:30:39] "POST /api/upload-image HTTP/1.1" 200 -
+2025-10-24 14:37:29,489 - INFO - Save directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:37:29,492 - INFO - ============================================================
+2025-10-24 14:37:29,492 - INFO - IMAGE RECEIVER SERVER
+2025-10-24 14:37:29,492 - INFO - ============================================================
+2025-10-24 14:37:29,492 - INFO - Host: 0.0.0.0
+2025-10-24 14:37:29,493 - INFO - Port: 5000
+2025-10-24 14:37:29,493 - INFO - Save directory: C:\Users\NoName\Desktop\Project5-Glasses\chinese_food\images
+2025-10-24 14:37:29,493 - INFO - Allowed extensions: .jpg, .jpeg, .png, .gif, .bmp
+2025-10-24 14:37:29,493 - INFO - Max file size: 10MB
+2025-10-24 14:37:29,494 - INFO - API key required: False
+2025-10-24 14:37:29,494 - INFO - ============================================================
+2025-10-24 14:37:30,428 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.27.242.182:5000
+2025-10-24 14:37:30,428 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-24 14:37:54,400 - INFO - Image upload request from IP: 172.27.242.71
+2025-10-24 14:37:54,402 - INFO - Image saved successfully: rpi_image_20251024_143754_best_face_20251024-143754-f.jpg
+2025-10-24 14:37:54,402 - INFO - Upload successful: rpi_image_20251024_143754_best_face_20251024-143754-f.jpg (5801 bytes)
+2025-10-24 14:37:54,403 - INFO - 172.27.242.71 - - [24/Oct/2025 14:37:54] "POST /api/upload-image HTTP/1.1" 200 -
+2025-10-24 14:37:55,175 - INFO - Image upload request from IP: 172.27.242.71
+2025-10-24 14:37:55,192 - INFO - Image saved successfully: rpi_image_20251024_143755_best_face_20251024-143755-f.jpg
+2025-10-24 14:37:55,209 - INFO - Upload successful: rpi_image_20251024_143755_best_face_20251024-143755-f.jpg (5825 bytes)
+2025-10-24 14:37:55,213 - INFO - 172.27.242.71 - - [24/Oct/2025 14:37:55] "POST /api/upload-image HTTP/1.1" 200 -
+2025-10-24 14:37:57,222 - INFO - Image upload request from IP: 172.27.242.71
+2025-10-24 14:37:57,234 - INFO - Image saved successfully: rpi_image_20251024_143757_best_face_20251024-143757-f.jpg
+2025-10-24 14:37:57,234 - INFO - Upload successful: rpi_image_20251024_143757_best_face_20251024-143757-f.jpg (5836 bytes)
+2025-10-24 14:37:57,235 - INFO - 172.27.242.71 - - [24/Oct/2025 14:37:57] "POST /api/upload-image HTTP/1.1" 200 -

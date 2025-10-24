@@ -1,0 +1,9 @@
+{
+  "host": "0.0.0.0",
+  "port": 5000,
+  "save_directory": "images",
+  "allowed_extensions": [".jpg", ".jpeg", ".png", ".gif", ".bmp"],
+  "max_file_size_mb": 10,
+  "require_api_key": false,
+  "api_key": "your-secret-key-here"
+}

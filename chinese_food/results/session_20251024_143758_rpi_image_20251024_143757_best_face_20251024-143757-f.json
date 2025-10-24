@@ -1,0 +1,82 @@
+{
+  "session_id": "20251024_143758",
+  "image_path": "images\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg",
+  "image_name": "rpi_image_20251024_143757_best_face_20251024-143757-f",
+  "start_time": "2025-10-24T14:37:58.832993",
+  "engines": {
+    "pimeyes": {
+      "engine": "PimEyes",
+      "script": "pimeyes_undetected.py",
+      "image": "images\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg",
+      "start_time": "2025-10-24T14:37:59.346544",
+      "status": "failed",
+      "manual_captcha": true,
+      "error": "'NoneType' object has no attribute 'write'",
+      "end_time": "2025-10-24T14:43:23.241218",
+      "duration": 323.89
+    },
+    "tineye": {
+      "engine": "TinEye",
+      "script": "tineye.py",
+      "image": "images\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg",
+      "start_time": "2025-10-24T14:37:58.927173",
+      "status": "failed",
+      "manual_captcha": false,
+      "error": "Command '['C:\\\\Users\\\\NoName\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\\\python.exe', 'tineye.py', 'images\\\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg']' returned non-zero exit status 3221225786.",
+      "end_time": "2025-10-24T14:43:23.234899",
+      "duration": 324.31
+    },
+    "facecheck": {
+      "engine": "FaceCheck.ID",
+      "script": "facecheck_manualverif.py",
+      "image": "images\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg",
+      "start_time": "2025-10-24T14:37:59.345960",
+      "status": "failed",
+      "manual_captcha": false,
+      "error": "Command '['C:\\\\Users\\\\NoName\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\\\python.exe', 'facecheck_manualverif.py', 'images\\\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg']' returned non-zero exit status 3221225786.",
+      "end_time": "2025-10-24T14:43:23.259502",
+      "duration": 323.91
+    },
+    "copyseeker": {
+      "engine": "CopySeeker",
+      "script": "copyseeker.py",
+      "image": "images\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg",
+      "start_time": "2025-10-24T14:37:59.101352",
+      "status": "failed",
+      "manual_captcha": false,
+      "error": "Command '['C:\\\\Users\\\\NoName\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\\\python.exe', 'copyseeker.py', 'images\\\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg']' returned non-zero exit status 3221225786.",
+      "end_time": "2025-10-24T14:43:23.272573",
+      "duration": 324.17
+    },
+    "search4faces": {
+      "engine": "Search4Faces",
+      "script": "search4faces_ru.py",
+      "image": "images\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg",
+      "start_time": "2025-10-24T14:37:58.963868",
+      "status": "failed",
+      "manual_captcha": false,
+      "error": "Command '['C:\\\\Users\\\\NoName\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\\\python.exe', 'search4faces_ru.py', 'images\\\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg']' returned non-zero exit status 3221225786.",
+      "end_time": "2025-10-24T14:43:23.281309",
+      "duration": 324.32
+    },
+    "saucenao": {
+      "engine": "SauceNAO",
+      "script": "saucenao.py",
+      "image": "images\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg",
+      "start_time": "2025-10-24T14:37:58.882688",
+      "status": "failed",
+      "manual_captcha": false,
+      "error": "Command '['C:\\\\Users\\\\NoName\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\\\python.exe', 'saucenao.py', 'images\\\\rpi_image_20251024_143757_best_face_20251024-143757-f.jpg']' returned non-zero exit status 3221225786.",
+      "end_time": "2025-10-24T14:43:23.294483",
+      "duration": 324.41
+    }
+  },
+  "summary": {
+    "total_engines": 6,
+    "completed": 0,
+    "failed": 6,
+    "manual_captcha_required": 2
+  },
+  "end_time": "2025-10-24T14:43:23.295239",
+  "total_duration": 324.46
+}

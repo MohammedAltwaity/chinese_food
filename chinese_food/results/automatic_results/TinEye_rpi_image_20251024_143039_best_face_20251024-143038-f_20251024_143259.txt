@@ -1,0 +1,14 @@
+Results for TinEye
+Image: images\rpi_image_20251024_143039_best_face_20251024-143038-f.jpg
+Timestamp: 2025-10-24T14:32:59.001678
+==================================================
+
+STDOUT:
+--------------------
+Opened TinEye. Waiting 3 seconds for page to load...
+Uploaded images\rpi_image_20251024_143039_best_face_20251024-143038-f.jpg to TinEye. Waiting 2 seconds before submitting...
+Waiting 10 seconds for results...
+Could not find result count.
+No matches found.
+Browser is open. Press Enter to close...
+
