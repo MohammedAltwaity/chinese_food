@@ -45,7 +45,7 @@ The system performs **recursive automated searches** until a match (“hit”) i
 ### 📦 Installation
 ```bash
 pip install opencv-python face-recognition selenium
-
+```
 ### Usage
 
 Capture images: Use the included script to capture facial samples.
